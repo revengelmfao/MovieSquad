@@ -1,5 +1,4 @@
 import db from "../config/connection.js";
-import cleanDB from "./cleanDb.js";
 
 // Simple function to demonstrate usage of imports
 const seedDatabase = async () => {
@@ -20,8 +19,7 @@ const seedDatabase = async () => {
   }
 };
 
-// Uncomment to run seed function:
-// seedDatabase();
+seedDatabase();
 
 export default seedDatabase;
 

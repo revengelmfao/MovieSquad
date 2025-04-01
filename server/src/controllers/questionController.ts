@@ -22,7 +22,7 @@ const mockQuestions = [
   }
 ];
 
-export const getRandomQuestions = (req: Request, res: Response) => {
+export const getRandomQuestions = (_req: Request, res: Response) => {
   try {
     // For now, just return the mock data
     res.json(mockQuestions);

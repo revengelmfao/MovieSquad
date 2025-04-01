@@ -1,20 +1,18 @@
 import mongoose from 'mongoose';
 
-// Function to clean database collections
-const cleanDB = async (modelName: string, collectionName: string) => {
+export const cleanDB = async () => {
   try {
-    // This will clean/drop the specified collection
-    await mongoose.connection.db.dropCollection(collectionName);
-    console.log(`${modelName} collection cleaned!`);
-  } catch (err) {
-    // If collection doesn't exist, just return
-    if ((err as any).code === 26) {
-      console.log(`${modelName} collection doesn't exist, nothing to clean`);
-      return;
+    if (mongoose.connection.db) {
+      const collections = await mongoose.connection.db.collections();
+      
+      for (let collection of collections) {
+        await collection.deleteMany({});
+      }
+      console.log('Database cleaned');
     }
-    throw err;
+  } catch (err) {
+    console.error('Error cleaning database:', err);
+    process.exit(1);
   }
 };
-
-export default cleanDB;
 
