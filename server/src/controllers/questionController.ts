@@ -1,15 +1,32 @@
-import type { Request, Response } from 'express';
-// import question model
-import Question from '../models/Question.js';
+import { Request, Response } from 'express';
 
-// gets a set of random questions
-export const getRandomQuestions = async (_req: Request, res: Response) => {
+// Temporary mock data
+const mockQuestions = [
+  {
+    question: 'What is JavaScript?',
+    answers: [
+      { text: 'A programming language', isCorrect: true },
+      { text: 'A markup language', isCorrect: false },
+      { text: 'A database', isCorrect: false },
+      { text: 'An operating system', isCorrect: false }
+    ]
+  },
+  {
+    question: 'What does HTML stand for?',
+    answers: [
+      { text: 'Hyper Text Markup Language', isCorrect: true },
+      { text: 'High Tech Machine Learning', isCorrect: false },
+      { text: 'Home Tool Management Language', isCorrect: false },
+      { text: 'Hyperlink Text Management Language', isCorrect: false }
+    ]
+  }
+];
+
+export const getRandomQuestions = (_req: Request, res: Response) => {
   try {
-    const questions = await Question.aggregate([
-      { $sample: { size: 10 } },
-      { $project: { __v: 0 } }]);
-    res.status(200).json(questions);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    // For now, just return the mock data
+    res.json(mockQuestions);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error', error });
   }
 };
