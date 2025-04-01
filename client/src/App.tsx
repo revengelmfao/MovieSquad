@@ -1,9 +1,10 @@
-import Quiz from './components/Quiz';
+import LandingPage from './components/LandingPage';
+import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <Quiz />
+      <LandingPage />
     </div>
   );
 }
