@@ -1,8 +1,36 @@
-import ReactDOM from 'react-dom/client'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import App from './App.js'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <App />
-)
+import App from './App.tsx';
+import ErrorPage from './pages/ErrorPage.tsx';
+import Home from './pages/Home.tsx';
+import MoviesPage from './pages/MoviesPage.tsx';
+import ProfilePage from './pages/ProfilePage.tsx';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        index: true,
+        element: <Home />
+      }, 
+      {
+        path: '/moviespage',
+        element: <MoviesPage />
+      }, 
+      {
+        path: '/profilepage',
+        element: <ProfilePage />
+      }, 
+    ]
+  }
+])
+
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(<RouterProvider router={router} />);
+}
