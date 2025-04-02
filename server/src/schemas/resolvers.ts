@@ -116,8 +116,15 @@ const resolvers = {
   },
   Mutation: {
     createUser: async (_: any, { username, email, password }: User) => {
-      const user = await User.create({ username, email, password });
-      const token = signToken(user);
+      // Generate a userId (example: could use a UUID library)
+      const userId = username.toLowerCase().replace(/\s/g, '') + Date.now().toString();
+      
+      const user = await User.create({ userId, username, email, password });
+      const token = signToken({ Changed to String() which is more explicit for TypeScript
+        username: user.username, 
+        email: user.email, 
+        _id: String(user._id)
+      });
       return { token, user };
     },
     login: async (_: any, { email, password }: User) => {
@@ -129,7 +136,11 @@ const resolvers = {
       if (!correctPw) {
         throw new AuthenticationError("Incorrect credentials");
       }
-      const token = signToken(user);
+      const token = signToken({ Changed to String() which is more explicit for TypeScript
+        username: user.username, 
+        email: user.email, 
+        _id: user._id.toString() 
+      });
       return { token, user };
     },
     saveMovie: async (_: any, { movieData }: saveMovieInput, context: UserContext) => {
