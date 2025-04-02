@@ -1,16 +1,18 @@
-import models from '../models/index.js';
-import db from '../config/connection.js';
+import mongoose from 'mongoose';
 
-export default async (modelName: "Question", collectionName: string) => {
+export const cleanDB = async () => {
   try {
-    let modelExists = await models[modelName]?.db?.db?.listCollections({
-      name: collectionName
-    }).toArray()
-
-    if (modelExists && modelExists.length) {
-      await db.dropCollection(collectionName);
+    if (mongoose.connection.db) {
+      const collections = await mongoose.connection.db.collections();
+      
+      for (let collection of collections) {
+        await collection.deleteMany({});
+      }
+      console.log('Database cleaned');
     }
   } catch (err) {
-    throw err;
+    console.error('Error cleaning database:', err);
+    process.exit(1);
   }
-}
+};
+

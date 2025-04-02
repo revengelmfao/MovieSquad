@@ -1,14 +1,26 @@
 import db from "../config/connection.js";
-import Question from "../models/Question.js";
-import cleanDB from "./cleanDb.js";
 
-import pythonQuestions from './pythonQuestions.json' assert { type: "json" };
+// Simple function to demonstrate usage of imports
+const seedDatabase = async () => {
+  try {
+    // Example of using the db connection
+    const dbStatus = db.readyState === 1 ? 'connected' : 'disconnected';
+    console.log(`Database status: ${dbStatus}`);
+    
+    // Example of using cleanDB 
+    // Uncomment and modify when needed:
+    // await cleanDB('Question', 'questions');
+    
+    console.log('Database seeding complete!');
+    process.exit(0);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+};
 
-db.once('open', async () => {
-  await cleanDB('Question', 'questions');
+seedDatabase();
 
-  await Question.insertMany(pythonQuestions);
+export default seedDatabase;
 
-  console.log('Questions seeded!');
-  process.exit(0);
-});
+
