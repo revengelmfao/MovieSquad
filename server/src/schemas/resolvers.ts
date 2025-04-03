@@ -16,6 +16,7 @@ interface User {
   ratings: Rating[];
   reviews: Review[];
   createdAt: string;
+  comparePassword: (password: string) => Promise<boolean>; // Add this line
 }
 
 interface MovieInput {
