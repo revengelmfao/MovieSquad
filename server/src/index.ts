@@ -3,14 +3,14 @@ import path from 'path';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas';
-import { authMiddleware } from './utils/auth';
+import { authMiddleware, UserContext } from './utils/auth';
 import db from './config/connection';
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
 // Create new Apollo server and pass in schema data
-const server = new ApolloServer({
+const server = new ApolloServer<UserContext>({
   typeDefs,
   resolvers,
 });

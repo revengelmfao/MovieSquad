@@ -4,6 +4,12 @@ import jwt from 'jsonwebtoken';
 const secret = process.env.JWT_SECRET || 'localsecretkey';
 const expiration = '2h';
 
+// Define the UserContext interface
+export interface UserContext {
+  user: { username?: string; email?: string; _id?: string } | null;
+  token?: string;
+}
+
 // Custom authentication error class
 export class AuthenticationError extends Error {
   constructor(message: string) {
@@ -18,13 +24,13 @@ export const signToken = ({ username, email, _id }: { username: string, email: s
   return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
 };
 
-// Function to authenticate requests
-export const authMiddleware = ({ req }: { req: any }) => {
+// Function to authenticate requests - modified to return a Promise
+export const authMiddleware = async ({ req }: { req: any }): Promise<UserContext> => {
   // Get token from request
-  let token = req.body.token || req.query.token || req.headers.authorization;
+  let token = req.body?.token || req.query?.token || req.headers?.authorization;
 
   // Format token if it comes from headers
-  if (req.headers.authorization) {
+  if (req.headers?.authorization) {
     token = token.split(' ').pop().trim();
   }
 
