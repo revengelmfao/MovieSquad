@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas';
 import { authMiddleware } from './utils/auth';
 import db from './config/connection';
@@ -8,14 +9,10 @@ import db from './config/connection';
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
 // Create new Apollo server and pass in schema data
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: authMiddleware,
 });
 
 // If in production, serve client/build as static assets
@@ -38,22 +35,31 @@ if (process.env.NODE_ENV === 'production') {
   }
   
   app.use(express.static(clientBuildPath));
-  
-  // Serve index.html for any route not handled by the API
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
-  });
 }
 
 const startApolloServer = async () => {
   await server.start();
   
-  server.applyMiddleware({ app });
+  // Apply Express middleware *after* server has started
+  app.use(express.urlencoded({ extended: false }));
+  app.use(express.json());
+  
+  // Apply Apollo middleware with context
+  app.use('/graphql', expressMiddleware(server, {
+    context: authMiddleware
+  }));
+  
+  // Serve index.html for any other route in production
+  if (process.env.NODE_ENV === 'production') {
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(path.resolve(__dirname, '../../client/dist'), 'index.html'));
+    });
+  }
   
   db.once('open', () => {
     app.listen(PORT, () => {
       console.log(`API server running on port ${PORT}!`);
-      console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
+      console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
     });
   });
 };
