@@ -120,7 +120,7 @@ const resolvers = {
       const userId = username.toLowerCase().replace(/\s/g, '') + Date.now().toString();
       
       const user = await User.create({ userId, username, email, password });
-      const token = signToken({ Changed to String() which is more explicit for TypeScript
+      const token = signToken({ 
         username: user.username, 
         email: user.email, 
         _id: String(user._id)
@@ -128,7 +128,7 @@ const resolvers = {
       return { token, user };
     },
     login: async (_: any, { email, password }: User) => {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email }) as unknown as User;
       if (!user) {
         throw new AuthenticationError("Incorrect credentials");
       }
@@ -136,7 +136,7 @@ const resolvers = {
       if (!correctPw) {
         throw new AuthenticationError("Incorrect credentials");
       }
-      const token = signToken({ Changed to String() which is more explicit for TypeScript
+      const token = signToken({ 
         username: user.username, 
         email: user.email, 
         _id: user._id.toString() 
