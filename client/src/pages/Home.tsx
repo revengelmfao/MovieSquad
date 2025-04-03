@@ -1,10 +1,12 @@
-import LoginForm from "../components/LoginForm";
+import Search from "../components/Search";
+import SearchMovieList from "../components/SearchMovieList.tsx"
+import { useState } from 'react';
 
 const Home = () => {
 
-  /*  const [movies,setMovies] = useState<MovieData[]>([]); 
+  const [results, setResults] = useState([]);
 
-    useEffect(() => {
+/* useEffect(() => {
         fetchMovies();
     }, []);
 
@@ -23,6 +25,8 @@ const Home = () => {
       <section>
         <h1>THIS IS THE HOME PAGE/ EXAMPLE</h1>
         
+        <Search setResults={setResults} />
+        <SearchMoviesList results={results}/>
       </section>
 
     );
