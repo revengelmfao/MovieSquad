@@ -18,7 +18,7 @@ const Navbar = () => {
           <Link to="/moviespage" className="m-0">Movies</Link>
         </div>
         <div >
-          <Link to="/profilepage" className="m-0">My Watchlist</Link>
+          <Link to="/profilepage" className="m-0">My Profile Watchlist</Link>
         </div>
       </header>
     </section>
