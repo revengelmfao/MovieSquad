@@ -1,17 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --bg-color: #450000;
-}
-
-body {
-  font-family: 'Rubik', sans-serif;
-  background-color: var(--bg-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; 
-  margin: 0; 
+/*--bg-color: #450000; --> */
 }
 
 h1,
