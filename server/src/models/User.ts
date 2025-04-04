@@ -9,11 +9,12 @@ interface IUser extends Document {
   username: string;
   email: string;
   password: string;
-  savedMovies: IMovie[];
-  watchlist: string[];
-  ratings: string[];
-  reviews: string[];
-  createdAt: Date;
+  friends: string[]; // Array of friend IDs, references to User model
+  savedMovies: IMovie[]; // Array of saved movies
+  watchlist: IMovie[]; // Array of watchlist movies
+  ratings: string[]; // Array of ratings
+  reviews: string[]; // Array of reviews
+  createdAt: Schema.Types.Date;
   comparePassword: (password: string) => Promise<boolean>;
 }
 
@@ -22,8 +23,9 @@ const userSchema = new Schema<IUser>({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  savedMovies: [movieSchema],
-  watchlist: [{ type: String }],
+  friends: [{ type: String, ref: "User" }], // Array of friend IDs
+  savedMovies: [movieSchema], // Array of saved movies
+  watchlist: [movieSchema],
   ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
   createdAt: { type: Date, default: Date.now },
