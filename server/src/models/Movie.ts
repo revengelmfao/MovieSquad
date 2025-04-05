@@ -9,8 +9,8 @@ export interface IMovie extends Document {
     director: string;
     actors: string[];
     genres: string[];
-    ratings: string[];
-    reviews: string[];
+    reviews: Schema.Types.ObjectId[]; // Array of review IDs, references to Review model
+    averageRating: number; // Virtual property for average rating
 }
 
 const movieSchema = new Schema<IMovie>({
@@ -22,10 +22,20 @@ const movieSchema = new Schema<IMovie>({
     director: { type: String, required: true },
     actors: [{ type: String, required: true }],
     genres: [{ type: String, required: true }],
-    ratings: [{ type: Schema.Types.ObjectId, ref: 'Rating' }],
     reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
 }, {
+    toJSON: { virtuals: true },
     timestamps: true,
 });
+
+movieSchema.virtual('averageRating').get(function (this: IMovie) {
+    if (this.reviews.length === 0) return 0;
+    const totalRating = this.reviews.reduce((acc, review: any) => {
+        const rating = review?.rating?.score || 0; // Assuming review has a rating property
+        return acc + rating;
+    }, 0);
+    return totalRating / this.reviews.length;
+}
+);
 
 export default movieSchema;
