@@ -4,10 +4,13 @@ import { User, Movie } from '../models/index.js';
 // Get all users
 export const getAllUsers = async (_req: Request, res: Response) => {
     try {
+        console.log('Getting all users...');
         const users = await User.find();
-        res.json(users);
+        console.log(`Found ${users.length} users`);
+        return res.json(users);
     } catch (err) {
-        res.status(500).json(err);
+        console.error('Error in getAllUsers:', err);
+        return res.status(500).json({ message: 'Error retrieving users', error: err });
     }
 };
 

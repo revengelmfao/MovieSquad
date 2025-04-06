@@ -1,4 +1,4 @@
-export const typeDefs = `
+const typeDefs = `
   type User {
     _id: ID!
     userId: String!
@@ -21,6 +21,10 @@ export const typeDefs = `
     director: String!
     actors: [String!]!
     genres: [String!]!
+    imdbRating: String
+    rated: String
+    runtime: String
+    language: String
     ratings: [Rating]
     reviews: [Review]
     createdAt: String
@@ -57,6 +61,10 @@ export const typeDefs = `
     director: String!
     actors: [String!]!
     genres: [String!]!
+    imdbRating: String
+    rated: String
+    runtime: String
+    language: String
   }
 
   type Query {

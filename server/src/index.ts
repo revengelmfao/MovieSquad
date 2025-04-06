@@ -3,7 +3,7 @@ import path from 'path';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas/index.js';
-import { authMiddleware, UserContext } from './services/auth-service.js';
+import { authenticateToken, UserContext } from './services/auth-service.js';
 import connectDB from './config/connection.js';
 // Import API routes
 import apiRoutes from './routes/api/index.js';
@@ -46,12 +46,18 @@ const startApolloServer = async () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
   
-  // Mount the API routes
+  // Mount the API routes - make sure this line is present
   app.use('/api', apiRoutes);
+  
+  // Add debug middleware to log all incoming requests
+  app.use((req, res, next) => {
+    console.log(`${req.method} request to ${req.url}`);
+    next();
+  });
   
   // Apply Apollo middleware with context
   app.use('/graphql', expressMiddleware(server, {
-    context: authMiddleware
+    context: authenticateToken
   }));
   
   // Serve index.html for any other route in production
@@ -69,6 +75,7 @@ const startApolloServer = async () => {
       console.log(`API server running on port ${PORT}!`);
       console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
       console.log(`REST API available at http://localhost:${PORT}/api`);
+      console.log(`Get all users at http://localhost:${PORT}/api/users`);
     });
   } catch (err) {
     console.error('Failed to connect to MongoDB:', err);

@@ -17,6 +17,15 @@ const seedDB = async () => {
 
     // Create users with movies
     const createdUsers = [];
+        // Create users
+        const users = await User.create([
+            { username: 'Movie_Squad', email: 'MovieSquad@Team3.com' },
+          ]);
+          
+          // Add the created user to the createdUsers array
+          createdUsers.push(...users);
+      
+          console.log('Users seeded');
     
     for (const user of userData) {
       // Generate userId for each user

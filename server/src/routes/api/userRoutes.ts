@@ -13,18 +13,18 @@ const router = Router();
 
 // /api/users
 router.route('/')
-    .get(getAllUsers)
-    .post(createUser);
+    .get(getAllUsers as any)
+    .post(createUser as any);
 
 // /api/users/:userId
 router.route('/:userId')
-    .get(getUserById)
-    .put(updateUser)
-    .delete(deleteUser);
+    .get(getUserById as any)
+    .put(updateUser as any)
+    .delete(deleteUser as any);
 
 // /api/users/:userId/friends/:friendId
 router.route('/:userId/friends/:friendId')
-    .post(addFriend)
-    .delete(removeFriend);
+    .post(addFriend as any)
+    .delete(removeFriend as any);
 
 export default router;

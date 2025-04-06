@@ -1,25 +1,33 @@
 import jwt from 'jsonwebtoken';
-import { GraphQLError } from 'graphql';
 import { Request } from 'express';
+import { ApolloServerErrorCode } from '@apollo/server/errors';
+import { GraphQLError } from 'graphql';
 import dotenv from 'dotenv';
+// Fix the import path
+import type { ExpressContextFunctionArgument } from '@apollo/server/express4';
 dotenv.config();
 
-// Add the UserContext interface export
+const secret = process.env.JWT_SECRET || 'secretkey';
+const expiration = '2h';
+
+export interface TokenUser {
+  username: string;
+  email: string;
+  _id: string;
+}
+
+// Define the UserContext interface used by Apollo Server
 export interface UserContext {
-  user: {
-    username: string;
-    email: string;
-    _id: string;
-  } | null;
+  user: TokenUser | null;
   token: string | null;
 }
 
-// Return a Promise to match Apollo's expected context type
-export const authMiddleware = async ({ req }: { req: Request }): Promise<UserContext> => {
-  let token = req.body?.token || req.query?.token || req.headers.authorization;
+// This function properly handles Apollo's context integration
+export const authenticateToken = async ({ req }: ExpressContextFunctionArgument): Promise<UserContext> => {
+  let token = req.headers.authorization || '';
 
-  if (req.headers.authorization) {
-    token = token.split(' ').pop()?.trim() || '';
+  if (token.startsWith('Bearer ')) {
+    token = token.slice(7, token.length).trim();
   }
 
   if (!token) {
@@ -27,28 +35,26 @@ export const authMiddleware = async ({ req }: { req: Request }): Promise<UserCon
   }
 
   try {
-    const { data }: any = jwt.verify(token, process.env.JWT_SECRET_KEY || '', { maxAge: '2hr' });
+    const { data } = jwt.verify(token, secret) as { data: TokenUser };
     return { user: data, token };
-  } catch (err) {
+  } catch {
     console.log('Invalid token');
     return { user: null, token: null };
   }
-};
+}
 
-// Fixed export for authenticateToken (for server.ts)
-export const authenticateToken = authMiddleware;
-
-// Fix signature to match how it's called in resolvers
-export const signToken = ({ username, email, _id }: { username: string; email: string; _id: string }) => {
+export const signToken = ({ username, email, _id }: TokenUser) => {
   const payload = { username, email, _id };
-  const secretKey: any = process.env.JWT_SECRET_KEY;
-
-  return jwt.sign({data: payload}, secretKey, { expiresIn: '2h' });
+  return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
 };
 
 export class AuthenticationError extends GraphQLError {
   constructor(message: string) {
-    super(message, undefined, undefined, undefined, ['UNAUTHENTICATED']);
-    Object.defineProperty(this, 'name', { value: 'AuthenticationError' });
+    super(message, {
+      extensions: {
+        code: ApolloServerErrorCode.INTERNAL_SERVER_ERROR,
+        http: { status: 401 },
+      },
+    });
   }
 }

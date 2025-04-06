@@ -1,61 +1,63 @@
 import { User, Rating, Review, Movie } from "../models/index.js";
-import { signToken, AuthenticationError } from "../services/auth-service.js";
+import { signToken, AuthenticationError, UserContext, TokenUser } from "../services/auth-service.js";
+import { Schema, Document, ObjectId, Types } from "mongoose";
 
-interface User {
+// Define proper interfaces for your types
+interface UserType {
   _id: string;
   username: string;
   email: string;
   password: string;
-  savedMovies: string[];
+  savedMovies: MovieType[];
   watchlist: string[];
-  ratings: Rating[];
-  reviews: Review[];
+  ratings: RatingType[];
+  reviews: IReviewType[];
   createdAt: string;
 }
 
-interface UserDocument extends User {
-  comparePassword(password: string): Promise<boolean>;
+// Interface for User document with isCorrectPassword method
+interface UserDocument extends Document {
+  userId: string;
+  username: string;
+  email: string;
+  password: string;
+  savedMovies: MovieType[];
+  watchlist: string[];
+  ratings: RatingType[];
+  reviews: IReviewType[];
+  createdAt: string;
+  isCorrectPassword(password: string): Promise<boolean>;
 }
 
-interface MovieInput {
+interface MovieType {
+  _id?: string;
   movieId: string;
   title: string;
   posterPath: string;
   year: number;
-  description: string;
+  plot: string;
   director: string;
   actors: string[];
   genres: string[];
-  ratings: Rating[];
-  reviews: Review[];
 }
 
-interface saveMovieInput {
-  movieData: MovieInput;
+interface MovieInput {
+  movieData: MovieType;
 }
 
-interface removeMovieInput {
-  movieId: string;
-}
-
-interface Rating {
+interface RatingType {
   userId: string;
   movieId: string;
   score: number;
   review: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
-interface Review {
+interface IReviewType {
   userId: string;
   movieId: string;
   review: string;
-  createdAt: string;
-}
-
-interface UserContext {
-  user: User | null;
-  token: string | null;
+  createdAt?: string;
 }
 
 const resolvers = {
@@ -64,7 +66,12 @@ const resolvers = {
       if (!context.user) {
         throw new AuthenticationError("You need to be logged in!");
       }
-      return context.user;
+      
+      const user = await User.findById(context.user._id)
+        .populate("ratings")
+        .populate("reviews");
+        
+      return user;
     },
     getUser: async (_: any, { _id }: { _id: string }) => {
       const user = await User.findById(_id).populate("ratings").populate("reviews");
@@ -85,10 +92,11 @@ const resolvers = {
       return users;
     },
     getSavedMovies: async (_: any, { userId }: { userId: string }) => {
-      const user = await User.findById(userId).populate("savedMovies").populate("ratings").populate("reviews");
+      const user = await User.findById(userId);
       if (!user) {
         throw new Error("User not found");
       }
+      // No need to populate savedMovies as they are embedded documents
       return user.savedMovies;
     },
     getWatchlist: async (_: any, { userId }: { userId: string }) => {
@@ -114,8 +122,8 @@ const resolvers = {
     },
   },
   Mutation: {
-    createUser: async (_: any, { username, email, password }: User) => {
-      // Generate a userId (example: could use a UUID library)
+    createUser: async (_: any, { username, email, password }: { username: string, email: string, password: string }) => {
+      // Generate a userId
       const userId = username.toLowerCase().replace(/\s/g, '') + Date.now().toString();
       
       const user = await User.create({ userId, username, email, password });
@@ -126,26 +134,32 @@ const resolvers = {
       });
       return { token, user };
     },
-    login: async (_: any, { email, password }: User) => {
-      const user = await User.findOne({ email }) as unknown as UserDocument;
+    login: async (_: any, { email, password }: { email: string, password: string }) => {
+      const user = await User.findOne({ email }) as UserDocument;
       if (!user) {
         throw new AuthenticationError("Incorrect credentials");
       }
-      const correctPw = await user.comparePassword(password);
+      // Use isCorrectPassword method
+      const correctPw = await user.isCorrectPassword(password);
       if (!correctPw) {
         throw new AuthenticationError("Incorrect credentials");
       }
+      
+      // Fix: Explicitly convert ObjectId to string and use proper type assertion
+      const userId = user._id ? user._id.toString() : '';
+      
       const token = signToken({ 
         username: user.username, 
         email: user.email, 
-        _id: user._id.toString() 
+        _id: userId
       });
       return { token, user };
     },
-    saveMovie: async (_: any, { movieData }: saveMovieInput, context: UserContext) => {
+    saveMovie: async (_: any, { movieData }: { movieData: MovieType }, context: UserContext) => {
       if (!context.user) {
         throw new AuthenticationError("You need to be logged in!");
       }
+      
       const user = await User.findByIdAndUpdate(
         context.user._id,
         { $addToSet: { savedMovies: movieData } },
@@ -153,7 +167,7 @@ const resolvers = {
       );
       return user;
     },
-    removeMovie: async (_: any, { movieId }: removeMovieInput, context: UserContext) => {
+    removeMovie: async (_: any, { movieId }: { movieId: string }, context: UserContext) => {
       if (!context.user) {
         throw new AuthenticationError("You need to be logged in!");
       }
@@ -186,7 +200,7 @@ const resolvers = {
       );
       return user;
     },
-    addRating: async (_: any, { movieId, score, review }: Rating, context: UserContext) => {
+    addRating: async (_: any, { movieId, score, review }: RatingType, context: UserContext) => {
       if (!context.user) {
         throw new AuthenticationError("You need to be logged in!");
       }
@@ -208,7 +222,7 @@ const resolvers = {
       );
       return user;
     },
-    updateRating: async (_: any, { movieId, score, review }: Rating, context: UserContext) => {
+    updateRating: async (_: any, { movieId, score, review }: RatingType, context: UserContext) => {
       if (!context.user) {
         throw new AuthenticationError("You need to be logged in!");
       }
@@ -219,7 +233,7 @@ const resolvers = {
       );
       return user;
     },
-    addReview: async (_: any, { movieId, review }: Review, context: UserContext) => {
+    addReview: async (_: any, { movieId, review }: { movieId: string, review: string }, context: UserContext) => {
       if (!context.user) {
         throw new AuthenticationError("You need to be logged in!");
       }
@@ -241,7 +255,7 @@ const resolvers = {
       );
       return user;
     },
-    updateReview: async (_: any, { movieId, review }: Review, context: UserContext) => {
+    updateReview: async (_: any, { movieId, review }: { movieId: string, review: string }, context: UserContext) => {
       if (!context.user) {
         throw new AuthenticationError("You need to be logged in!");
       }
