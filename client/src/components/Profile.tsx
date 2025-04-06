@@ -43,7 +43,7 @@ const Profile: React.FC = () => {
 
         <input
           type="text"
-          placeholder="Search for a movie or show..."
+          placeholder="Give your watchlist a name!"
           value={search}
           onChange={handleWatchlistName}
           onKeyDown={(e) => e.key === 'Enter' && handleAddToWatchlist()}
