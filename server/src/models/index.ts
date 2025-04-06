@@ -1,5 +1,6 @@
-import User from "./User";
-import Rating from "./Rating";
-import Review from "./Review";
+import User from "./User.js";
+import Rating from "./Rating.js";
+import Review from "./Review.js";
+import Movie from "./Movie.js";
 
-export { User, Rating, Review };
+export { User, Rating, Review, Movie };

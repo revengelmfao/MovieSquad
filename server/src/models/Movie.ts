@@ -7,7 +7,6 @@ interface IMovie extends Document {
     description: string;
     releaseDate: string;
     year: number;
-    plot: string;
     director: string;
     actors: string[];
     genres: string[];
@@ -37,9 +36,6 @@ const movieSchema = new Schema<IMovie>({
     },
     year: { 
         type: Number, 
-    },
-    plot: { 
-        type: String, 
     },
     director: { 
         type: String, 

@@ -11,18 +11,18 @@ if (!process.env.JWT_SECRET) {
 
 // Define the JWT payload interface
 interface JWTPayload {
-    id: number;
+    username: string; // Change to match expected payload
     email: string;
-    name: string;
+    _id: string; // Change to match expected payload
     exp?: number;
 }
 
-// Define the authenticated request interface
+// Update interface to match what's expected
 interface AuthenticatedRequest extends Request {
     user: {
-        id: number;
+        username: string; // Make this required
         email: string;
-        name: string;
+        _id: string; // Match what's used in auth-service
     };
 }
 
@@ -42,9 +42,9 @@ const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextF
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JWTPayload;
         req.user = {
-            id: decoded.id,
+            username: decoded.username, // Update to match the payload structure
             email: decoded.email,
-            name: decoded.name,
+            _id: decoded._id, // Update to match the payload structure
         };
         return next();
     } catch (err) {

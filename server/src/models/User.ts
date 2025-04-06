@@ -1,8 +1,8 @@
 import { Schema, model, type Document } from "mongoose";
 import bcrypt from "bcrypt";
 
-// Fix the import - use named import for movieSchema
-import Movie, { movieSchema, type IMovie } from "./Movie";
+// Fix the import extension
+import Movie, { movieSchema, type IMovie } from "./Movie.js";
 
 interface IUser extends Document {
   userId: string;
@@ -46,8 +46,8 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// custom method to compare and validate password for logging in
-userSchema.methods.isCorrectPassword = async function (password: string): Promise<boolean> {
+// Change method name to match what's being used in resolvers
+userSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
   return await bcrypt.compare(password, this.password);
 };
 

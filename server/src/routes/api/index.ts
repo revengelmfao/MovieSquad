@@ -1,7 +1,8 @@
 import express from 'express';
 const router = express.Router();
-import questionRoutes from './questionRoutes.js';
+import userRoutes from './userRoutes.js';
 
-router.use('/questions', questionRoutes);
+// Register all route modules
+router.use('/users', userRoutes);
 
 export default router;

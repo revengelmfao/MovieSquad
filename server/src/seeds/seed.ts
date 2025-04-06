@@ -1,26 +1,45 @@
-import db from "../config/connection.js";
+import connectDB from '../config/connection.js';
+import { Movie, Rating, Review, User } from '../models/index.js';
+import cleanDB from './cleanDb.js';
+import userData from './userData.json' with { type: 'json' };
+import movieData from './movieData.json' with { type: 'json' };
 
-// Simple function to demonstrate usage of imports
-const seedDatabase = async () => {
+const seedDatabase = async (): Promise<void> => {
   try {
-    // Example of using the db connection
-    const dbStatus = db.readyState === 1 ? 'connected' : 'disconnected';
-    console.log(`Database status: ${dbStatus}`);
+    await connectDB();
+    await cleanDB();
+
+    // Insert movies first
+    const movies = await Movie.insertMany(movieData);
+    console.log(`${movies.length} movies inserted`);
     
-    // Example of using cleanDB 
-    // Uncomment and modify when needed:
-    // await cleanDB('Question', 'questions');
+    // Create users
+    const users = await Promise.all(
+      userData.map(async (user) => {
+        // Generate userId for each user
+        const userId = user.username.toLowerCase().replace(/\s/g, '') + Date.now().toString();
+        
+        // Create a new user with the movieId in their watchlist
+        const newUser = await User.create({
+          ...user,
+          userId,
+          // Add the first movie to their watchlist
+          watchlist: [movies[0].movieId],
+          // Add the movie to their savedMovies
+          savedMovies: [movies[0]]
+        });
+        
+        return newUser;
+      })
+    );
     
-    console.log('Database seeding complete!');
+    console.log(`${users.length} users created with movies in their collections`);
+    console.log('Seeding completed successfully!');
     process.exit(0);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error('Error seeding database:', error);
     process.exit(1);
   }
-};
+}
 
 seedDatabase();
-
-export default seedDatabase;
-
-

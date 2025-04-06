@@ -1,10 +1,5 @@
-import { User, Rating, Review } from "../models/index.js";
-import { signToken, AuthenticationError } from "../utils/auth.js";
-
-import mongoose from "mongoose";
-import MovieSchema from "../models/Movie.js";
-
-const Movie = mongoose.model("Movie", MovieSchema);
+import { User, Rating, Review, Movie } from "../models/index.js";
+import { signToken, AuthenticationError } from "../services/auth-service.js";
 
 interface User {
   _id: string;
@@ -18,12 +13,16 @@ interface User {
   createdAt: string;
 }
 
+interface UserDocument extends User {
+  comparePassword(password: string): Promise<boolean>;
+}
+
 interface MovieInput {
   movieId: string;
   title: string;
   posterPath: string;
   year: number;
-  plot: string;
+  description: string;
   director: string;
   actors: string[];
   genres: string[];
@@ -128,7 +127,7 @@ const resolvers = {
       return { token, user };
     },
     login: async (_: any, { email, password }: User) => {
-      const user = await User.findOne({ email }) as unknown as User;
+      const user = await User.findOne({ email }) as unknown as UserDocument;
       if (!user) {
         throw new AuthenticationError("Incorrect credentials");
       }
