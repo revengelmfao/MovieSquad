@@ -39,7 +39,7 @@ const Profile: React.FC = () => {
       <h1 className="text-3xl font-bold text-gray-800 mb-4">Profile Page</h1>
 
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-md p-6 mb-6">
-        <h2 className="text-2xl font-semibold text-center text-gray-700 mb-4">Movie Search</h2>
+        <h2 className="text-2xl font-semibold text-center text-gray-700 mb-4">Create A Watchlist</h2>
 
         <input
           type="text"
@@ -66,7 +66,7 @@ const Profile: React.FC = () => {
           onClick={toggleDropdown}
           className="w-full bg-gray-800 text-white py-2 px-4 rounded-xl text-left font-semibold hover:bg-gray-700 transition"
         >
-          Saved Watchlist
+          Created Watchlists
         </button>
 
         {dropdownOpen && (
