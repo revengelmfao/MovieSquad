@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas/index.js';
@@ -7,6 +8,10 @@ import { authenticateToken, UserContext } from './services/auth-service.js';
 import connectDB from './config/connection.js';
 // Import API routes
 import apiRoutes from './routes/api/index.js';
+
+// Fix for __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -19,7 +24,7 @@ const server = new ApolloServer<UserContext>({
 
 // If in production, serve client/build as static assets
 if (process.env.NODE_ENV === 'production') {
-  // Use path.resolve to handle different deployment environments
+  // Use path.resolve for more reliable path resolution with the fixed __dirname
   const clientBuildPath = path.resolve(__dirname, '../../client/dist');
   
   // For debugging in production

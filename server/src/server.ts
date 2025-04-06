@@ -1,11 +1,16 @@
 import express from 'express';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Request, Response } from 'express';
 import connectDB from './config/connection.js'
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas/index.js';
 import { authenticateToken } from './services/auth-service.js';
+
+// Fix for __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const server = new ApolloServer({
   typeDefs,
@@ -27,11 +32,15 @@ const startApolloServer = async () => {
   }));
 
   if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/dist')));
+    // Use the fixed __dirname with path.resolve for more reliable path resolution
+    const clientPath = path.resolve(__dirname, '../../client/dist');
+    console.log('Serving static files from:', clientPath);
+    
+    app.use(express.static(clientPath));
 
     // Fix the type issue with req param
     app.get('*', (req: Request, res: Response) => {
-      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+      res.sendFile(path.join(clientPath, 'index.html'));
     });
   }
 
