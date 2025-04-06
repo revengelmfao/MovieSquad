@@ -1,21 +1,19 @@
 import { Schema, model, type Document } from "mongoose";
 import bcrypt from "bcrypt";
-
-import movieSchema from "./Movie";
-import type { IMovie } from "./Movie";
+import Movie, { movieSchema, type IMovie } from "./Movie.js";
 
 interface IUser extends Document {
   userId: string;
   username: string;
   email: string;
   password: string;
-  friends: string[]; // Array of friend IDs, references to User model
-  savedMovies: IMovie[]; // Array of saved movies
-  watchlist: IMovie[]; // Array of watchlist movies
-  ratings: string[]; // Array of ratings
-  reviews: string[]; // Array of reviews
-  createdAt: Schema.Types.Date;
-  comparePassword: (password: string) => Promise<boolean>;
+  savedMovies: IMovie[];
+  watchlist: string[];
+  ratings: Schema.Types.ObjectId[];
+  reviews: Schema.Types.ObjectId[];
+  createdAt: Date;
+  isCorrectPassword(password: string): Promise<boolean>;
+  savedMoviesCount: number;
 }
 
 const userSchema = new Schema<IUser>({
@@ -23,9 +21,8 @@ const userSchema = new Schema<IUser>({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  friends: [{ type: String, ref: "User" }], // Array of friend IDs
-  savedMovies: [movieSchema], // Array of saved movies
-  watchlist: [movieSchema],
+  savedMovies: [movieSchema],
+  watchlist: [{ type: String }],
   ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
   createdAt: { type: Date, default: Date.now },
@@ -45,9 +42,15 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.methods.comparePassword = async function (password: string) {
+// Rename comparePassword to isCorrectPassword to match interface
+userSchema.methods.isCorrectPassword = async function (password: string): Promise<boolean> {
   return await bcrypt.compare(password, this.password);
 };
 
+userSchema.virtual("savedMoviesCount").get(function (this: IUser) {
+  return this.savedMovies.length;
+});
+
 const User = model<IUser>("User", userSchema);
+
 export default User;

@@ -1,0 +1,4 @@
+/* Import bootstrap without using the ~ syntax */
+@import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+
+/* Your other global styles here */

@@ -1,23 +1,20 @@
 import { Schema, model, type Document } from 'mongoose';
 
 interface IRating extends Document {
-    ratingId: string;
-    userId: Schema.Types.ObjectId; // Reference to a user document
-    movieId: string; // Movie ID
+    userId: string;
+    movieId: string;
     score: number;
-    review?: Schema.Types.ObjectId; // Reference to a review document
+    review: string;
     createdAt: Date;
 }
 
 const ratingSchema = new Schema<IRating>({
-    ratingId: { type: String, required: true },
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Reference to a user document
+    // Remove _id as MongoDB will generate it automatically
+    userId: { type: String, required: true },
     movieId: { type: String, required: true },
     score: { type: Number, required: true },
-    review: { type: Schema.Types.ObjectId, ref: 'Review', required: false }, // Reference to a review document
-    createdAt: { type: Date, default: Date.now },
+    review: { type: String, required: true },
 }, {
-    toJSON: { virtuals: true },
     timestamps: true,
 });
 
