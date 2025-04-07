@@ -1,8 +1,6 @@
 import { Schema, model, type Document } from "mongoose";
 import bcrypt from "bcrypt";
-
-import movieSchema from "./Movie";
-import type { IMovie } from "./Movie";
+import Movie, { movieSchema, type IMovie } from "./Movie.js";
 
 interface IUser extends Document {
   userId: string;
@@ -11,10 +9,11 @@ interface IUser extends Document {
   password: string;
   savedMovies: IMovie[];
   watchlist: string[];
-  ratings: string[];
-  reviews: string[];
+  ratings: Schema.Types.ObjectId[];
+  reviews: Schema.Types.ObjectId[];
   createdAt: Date;
-  comparePassword: (password: string) => Promise<boolean>;
+  isCorrectPassword(password: string): Promise<boolean>;
+  savedMoviesCount: number;
 }
 
 const userSchema = new Schema<IUser>({
@@ -43,9 +42,15 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.methods.comparePassword = async function (password: string) {
+// Rename comparePassword to isCorrectPassword to match interface
+userSchema.methods.isCorrectPassword = async function (password: string): Promise<boolean> {
   return await bcrypt.compare(password, this.password);
 };
 
+userSchema.virtual("savedMoviesCount").get(function (this: IUser) {
+  return this.savedMovies.length;
+});
+
 const User = model<IUser>("User", userSchema);
+
 export default User;

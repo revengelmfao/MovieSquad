@@ -1,18 +1,20 @@
-import mongoose from 'mongoose';
+import { Movie, User } from '../models/index.js';
+import process from 'process';
 
-export const cleanDB = async () => {
+const cleanDB = async (): Promise<void> => {
   try {
-    if (mongoose.connection.db) {
-      const collections = await mongoose.connection.db.collections();
-      
-      for (let collection of collections) {
-        await collection.deleteMany({});
-      }
-      console.log('Database cleaned');
-    }
+    // Delete movies from movie collection
+    await Movie.deleteMany({});
+    console.log('Movie collection cleaned.');
+
+    // Delete movies from User collection
+    await User.deleteMany({});
+    console.log('User collection cleaned.');
+
   } catch (err) {
-    console.error('Error cleaning database:', err);
+    console.error('Error cleaning collections:', err);
     process.exit(1);
   }
 };
 
+export default cleanDB;

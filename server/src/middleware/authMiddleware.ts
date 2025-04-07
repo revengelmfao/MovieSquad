@@ -1,62 +1,30 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import { TokenUser } from '../services/auth-service.js';
 
-dotenv.config();
+const secret = process.env.JWT_SECRET || 'secretkey';
 
-// Ensure JWT secret is available
-if (!process.env.JWT_SECRET) {
-    throw new Error('JWT_SECRET is not defined in environment variables');
-}
-
-// Define the JWT payload interface
-interface JWTPayload {
-    id: number;
-    email: string;
-    name: string;
-    exp?: number;
-}
-
-// Define the authenticated request interface
-interface AuthenticatedRequest extends Request {
-    user: {
-        id: number;
-        email: string;
-        name: string;
-    };
-}
-
-const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const bearerToken = req.headers.authorization;
-
-    if (!bearerToken) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
-    // Extract the token from the Bearer format
-    const token = bearerToken.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ message: 'Invalid token format' });
-    }
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JWTPayload;
-        req.user = {
-            id: decoded.id,
-            email: decoded.email,
-            name: decoded.name,
-        };
-        return next();
-    } catch (err) {
-        if (err instanceof jwt.TokenExpiredError) {
-            return res.status(401).json({ message: 'Token expired' });
-        }
-        if (err instanceof jwt.JsonWebTokenError) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-        // Handle any other unexpected errors
-        return res.status(500).json({ message: 'Internal server error during authentication' });
-    }
+// Authentication middleware for REST API routes
+export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+  // Get token from header
+  const token = req.headers.authorization?.split(' ')[1] || '';
+  
+  if (!token) {
+    res.status(401).json({ message: 'No token provided' });
+    return;
+  }
+  
+  try {
+    // Verify token
+    const { data } = jwt.verify(token, secret) as { data: TokenUser };
+    
+    // Use a more forceful type assertion to bypass the type checking
+    (req as any).user = data;
+    
+    next();
+  } catch (err) {
+    console.error('Invalid token:', err);
+    res.status(401).json({ message: 'Invalid token' });
+    return;
+  }
 };
-
-export default authenticateToken;

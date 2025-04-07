@@ -1,17 +1,19 @@
 const typeDefs = `
   type User {
-    userId: ID!
+    _id: ID!
+    userId: String!
     username: String!
     email: String!
-    password: String!
-    savedMovies: [String!]!
-    watchlist: [String!]!
-    ratings: [Rating!]!
-    createdAt: String!
+    savedMovies: [Movie]
+    watchlist: [String]
+    ratings: [Rating]
+    reviews: [Review]
+    createdAt: String
   }
 
   type Movie {
-    movieId: ID!
+    _id: ID!
+    movieId: String!
     title: String!
     posterPath: String!
     year: Int!
@@ -19,36 +21,30 @@ const typeDefs = `
     director: String!
     actors: [String!]!
     genres: [String!]!
-    ratings: [Rating!]!
-    reviews: [Review!]!
-  }
-
-  type MovieInput {
-    movieId: ID!
-    title: String!
-    posterPath: String!
-    year: Int!
-    plot: String!
-    director: String!
-    actors: [String!]!
-    genres: [String!]!
-    ratings: [Rating!]!
-    reviews: [Review!]!
+    imdbRating: String
+    rated: String
+    runtime: String
+    language: String
+    ratings: [Rating]
+    reviews: [Review]
+    createdAt: String
   }
 
   type Rating {
-    userId: ID!
+    _id: ID!
+    userId: String!
     movieId: String!
     score: Int!
     review: String!
-    createdAt: String!
+    createdAt: String
   }
 
   type Review {
-    userId: ID!
+    _id: ID!
+    userId: String!
     movieId: String!
     review: String!
-    createdAt: String!
+    createdAt: String
   }
 
   type Auth {
@@ -56,30 +52,45 @@ const typeDefs = `
     user: User
   }
 
+  input MovieInput {
+    movieId: String!
+    title: String!
+    posterPath: String!
+    year: Int!
+    plot: String!
+    director: String!
+    actors: [String!]!
+    genres: [String!]!
+    imdbRating: String
+    rated: String
+    runtime: String
+    language: String
+  }
+
   type Query {
     me: User
     getUser(_id: ID!): User
-    getAllUsers: [User!]!
     getMovie(movieId: String!): Movie
-    getSavedMovies(userId: ID!): [Movie!]!
-    getWatchlist(userId: ID!): [Movie!]!
-    getRatings(userId: ID!): [Rating!]!
-    getReviews(userId: ID!): [Review!]!
+    getAllUsers: [User]
+    getSavedMovies(userId: ID!): [Movie]
+    getWatchlist(userId: ID!): [String]
+    getRatings(userId: ID!): [Rating]
+    getReviews(userId: ID!): [Review]
   }
 
   type Mutation {
-    createUser(username: String!, email: String!, password: String!): User!
-    loginUser(email: String!, password: String!): User!
-    saveMovie(data: MovieInput!, userId: ID!): User!
-    removeMovie(movieId: ID!): User!
-    addToWatchlist(userId: ID!, movieId: String!): User!
-    removeFromWatchlist(userId: ID!, movieId: String!): User!
-    addRating(userId: ID!, movieId: String!, score: Int!, review: String!): User!
-    updateRating(userId: ID!, movieId: String!, score: Int!, review: String!): User!
-    removeRating(userId: ID!, movieId: String!): User!
-    addReview(userId: ID!, movieId: String!, review: String!): User!
-    updateReview(userId: ID!, movieId: String!, review: String!): User!
-    removeReview(userId: ID!, movieId: String!): User!
+    createUser(username: String!, email: String!, password: String!): Auth
+    login(email: String!, password: String!): Auth
+    saveMovie(movieData: MovieInput!): User
+    removeMovie(movieId: String!): User
+    addToWatchlist(movieId: String!): User
+    removeFromWatchlist(movieId: String!): User
+    addRating(movieId: String!, score: Int!, review: String!): User
+    removeRating(movieId: String!): User
+    updateRating(movieId: String!, score: Int!, review: String!): User
+    addReview(movieId: String!, review: String!): User
+    removeReview(movieId: String!): User
+    updateReview(movieId: String!, review: String!): User
   }
 `;
 
