@@ -18,7 +18,7 @@ const LandingPage = () => {
                 const response = await axios.get(`http://www.omdbapi.com/?apikey=${apiKey}&s=movie&type=movie`);
                 console.log(response.data);  
                 if (response.data.Response === 'True') {
-                    const sortedMovies = response.data.Search.sort((a, b) => {
+                    const sortedMovies = response.data.Search.sort((a: Movie, b: Movie) => {
                         return parseFloat(b.imdbRating) - parseFloat(a.imdbRating);
                     });
                     setMovies(sortedMovies);
