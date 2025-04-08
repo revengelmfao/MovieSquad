@@ -1,7 +1,7 @@
 const typeDefs = `
   type User {
     _id: ID!
-    userId: String!
+    userId: Number!
     username: String!
     email: String!
     savedMovies: [Movie]

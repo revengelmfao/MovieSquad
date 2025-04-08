@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import Movie, { movieSchema, type IMovie } from "./Movie.js";
 
 interface IUser extends Document {
-  userId: string;
+  userId: number;
   username: string;
   email: string;
   password: string;
@@ -17,7 +17,7 @@ interface IUser extends Document {
 }
 
 const userSchema = new Schema<IUser>({
-  userId: { type: String, required: true, unique: true },
+  userId: { type: Number, required: true, unique: true },
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },

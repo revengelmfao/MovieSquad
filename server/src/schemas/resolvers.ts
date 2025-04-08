@@ -17,7 +17,7 @@ interface UserType {
 
 // Interface for User document with isCorrectPassword method
 interface UserDocument extends Document {
-  userId: string;
+  userId: number;
   username: string;
   email: string;
   password: string;

@@ -1,7 +1,7 @@
 import { Schema, model, type Document } from 'mongoose';
 
 interface IRating extends Document {
-    userId: string;
+    userId: number;
     movieId: string;
     score: number;
     review: string;
@@ -10,7 +10,7 @@ interface IRating extends Document {
 
 const ratingSchema = new Schema<IRating>({
     // Remove _id as MongoDB will generate it automatically
-    userId: { type: String, required: true },
+    userId: { type: Number, required: true },
     movieId: { type: String, required: true },
     score: { type: Number, required: true },
     review: { type: String, required: true },
