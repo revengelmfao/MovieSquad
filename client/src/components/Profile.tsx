@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; // Import Link for routing
 
 const Profile: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -57,7 +58,6 @@ const Profile: React.FC = () => {
           >
             Add to Watchlist
           </button>
-
         </div>
       </div>
 
@@ -79,7 +79,10 @@ const Profile: React.FC = () => {
                   key={index}
                   className="px-4 py-2 hover:bg-blue-100 cursor-pointer border-b last:border-none"
                 >
-                  {item}
+                  {/* Link to watchlist page */}
+                  <Link to={`/watchlist/${item}`} className="text-blue-600 hover:underline">
+                    {item}
+                  </Link>
                 </li>
               ))
             )}
