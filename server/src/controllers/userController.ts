@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { User, Movie } from '../models/index.js';
+import { generateToken } from '../utils/jwt.js';
 
 // Get all users
 export const getAllUsers = async (_req: Request, res: Response) => {
@@ -112,5 +113,45 @@ export const removeFriend = async (req: Request, res: Response) => {
         return res.json(user);
     } catch (err) {
         return res.status(500).json(err);
+    }
+};
+
+
+// User login
+export const login = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
+        
+        // Find user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        // Check password
+        const isValidPassword = await user.isCorrectPassword(password);
+        if (!isValidPassword) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        // Generate JWT token
+        const token = generateToken({ 
+            id: user._id,
+            email: user.email,
+            username: user.username
+        });
+
+        // Return user data and token
+        return res.json({
+            token,
+            user: {
+                id: user._id,
+                email: user.email,
+                username: user.username
+            }
+        });
+    } catch (err) {
+        console.error('Login error:', err);
+        return res.status(500).json({ message: 'Error during login', error: err });
     }
 };
