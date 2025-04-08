@@ -1,10 +1,16 @@
+<<<<<<< HEAD
+import { defineConfig } from 'vite'
+=======
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
+>>>>>>> 1a4d91e14f14e26d88589ac927f73860a5b5d783
 
-// https://vitejs.dev/config/
 export default defineConfig({
+<<<<<<< HEAD
+  plugins: [],
+=======
   plugins: [
     tailwindcss(),
     react()
@@ -14,6 +20,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/_tests_/setup.ts'
   },
+>>>>>>> 1a4d91e14f14e26d88589ac927f73860a5b5d783
   server: {
     port: 3000,
     open: true,
