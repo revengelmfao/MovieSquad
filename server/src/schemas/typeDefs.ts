@@ -52,6 +52,14 @@ const typeDefs = `
     user: User
   }
 
+  type DatabaseStats {
+    users: Int
+    movies: Int
+    databaseName: String
+    connectionHost: String
+    isConnected: Boolean
+  }
+
   input MovieInput {
     movieId: String!
     title: String!
@@ -76,6 +84,7 @@ const typeDefs = `
     getWatchlist(userId: ID!): [String]
     getRatings(userId: ID!): [Rating]
     getReviews(userId: ID!): [Review]
+    databaseStats: DatabaseStats
   }
 
   type Mutation {

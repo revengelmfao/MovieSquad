@@ -1,32 +1,59 @@
 import React, { useState, useEffect } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import { ADD_TO_WATCHLIST } from '../utils/mutations.js';
+import { GET_ME } from '../utils/queries'; // Fix: import from queries.ts instead
+import Auth from '../utils/auth.js'; // Import Auth utility
 
 const Profile: React.FC = () => {
   const [search, setSearch] = useState('');
   const [watchlist, setWatchlist] = useState<string[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // Load watchlist from localStorage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem('watchlist');
-    if (saved) {
-      setWatchlist(JSON.parse(saved));
-    }
-  }, []);
+  // Get the user data including their watchlist
+  const { loading, data } = useQuery(GET_ME);
+  const userData = data?.me || {};
 
-  // Save watchlist to localStorage when it changes
+  // Add mutation hook
+  const [addToWatchlist] = useMutation(ADD_TO_WATCHLIST);
+
+  // Update local state when data loads from server
   useEffect(() => {
-    localStorage.setItem('watchlist', JSON.stringify(watchlist));
-  }, [watchlist]);
+    if (userData.watchlist) {
+      setWatchlist(userData.watchlist);
+    }
+  }, [userData]);
 
   const handleWatchlistName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
-  const handleAddToWatchlist = () => {
-    const trimmed = search.trim();
-    if (trimmed !== '' && !watchlist.includes(trimmed)) {
-      setWatchlist((prev) => [...prev, trimmed]);
+  const handleAddToWatchlist = async () => {
+    const movieId = search.trim();
+    
+    if (movieId === '' || watchlist.includes(movieId)) {
+      return;
+    }
+    
+    // Check if user is logged in
+    if (!Auth.loggedIn()) {
+      alert('You need to be logged in to add movies to your watchlist');
+      return;
+    }
+
+    try {
+      // Call the mutation to add to watchlist
+      const { data } = await addToWatchlist({
+        variables: { movieId },
+      });
+
+      // Update the local state with the server response
+      if (data?.addToWatchlist?.watchlist) {
+        setWatchlist(data.addToWatchlist.watchlist);
+      }
+      
       setSearch('');
+    } catch (err) {
+      console.error('Error adding to watchlist:', err);
     }
   };
 

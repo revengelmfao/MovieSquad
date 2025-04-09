@@ -36,9 +36,11 @@ export const authenticateToken = async ({ req }: ExpressContextFunctionArgument)
 
   try {
     const { data } = jwt.verify(token, secret) as { data: TokenUser };
+    // Add logging for debugging
+    console.log('Token verified successfully, user:', data.username);
     return { user: data, token };
-  } catch {
-    console.log('Invalid token');
+  } catch (error) {
+    console.log('Invalid token:', error instanceof Error ? error.message : 'Unknown error');
     return { user: null, token: null };
   }
 }

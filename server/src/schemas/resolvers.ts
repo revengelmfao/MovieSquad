@@ -1,6 +1,7 @@
 import { User, Rating, Review, Movie } from "../models/index.js";
 import { signToken, AuthenticationError, UserContext, TokenUser } from "../services/auth-service.js";
 import { Schema, Document, ObjectId, Types } from "mongoose";
+import { getDatabaseStats } from "../utils/atlas-utils.js";
 
 // Define proper interfaces for your types
 interface UserType {
@@ -120,6 +121,9 @@ const resolvers = {
       }
       return user.reviews;
     },
+    databaseStats: async () => {
+      return await getDatabaseStats();
+    }
   },
   Mutation: {
     createUser: async (_: any, { username, email, password }: { username: string, email: string, password: string }) => {
