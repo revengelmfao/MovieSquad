@@ -1,63 +1,34 @@
+
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-import { useMutation, useQuery } from '@apollo/client';
-import { ADD_TO_WATCHLIST } from '../utils/mutations.js';
-import { GET_ME } from '../utils/queries'; // Fix: import from queries.ts instead
-import Auth from '../utils/auth.js'; // Import Auth utility
-=======
 import { Link } from 'react-router-dom'; // Import Link for routing
->>>>>>> 970a0712a09a73a123acfed9f6c9129317e95241
 
 const Profile: React.FC = () => {
   const [search, setSearch] = useState('');
   const [watchlist, setWatchlist] = useState<string[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // Get the user data including their watchlist
-  const { loading, data } = useQuery(GET_ME);
-  const userData = data?.me || {};
-
-  // Add mutation hook
-  const [addToWatchlist] = useMutation(ADD_TO_WATCHLIST);
-
-  // Update local state when data loads from server
+  // Load watchlist from localStorage on mount
   useEffect(() => {
-    if (userData.watchlist) {
-      setWatchlist(userData.watchlist);
+    const saved = localStorage.getItem('watchlist');
+    if (saved) {
+      setWatchlist(JSON.parse(saved));
     }
-  }, [userData]);
+  }, []);
+
+  // Save watchlist to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('watchlist', JSON.stringify(watchlist));
+  }, [watchlist]);
 
   const handleWatchlistName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
-  const handleAddToWatchlist = async () => {
-    const movieId = search.trim();
-    
-    if (movieId === '' || watchlist.includes(movieId)) {
-      return;
-    }
-    
-    // Check if user is logged in
-    if (!Auth.loggedIn()) {
-      alert('You need to be logged in to add movies to your watchlist');
-      return;
-    }
-
-    try {
-      // Call the mutation to add to watchlist
-      const { data } = await addToWatchlist({
-        variables: { movieId },
-      });
-
-      // Update the local state with the server response
-      if (data?.addToWatchlist?.watchlist) {
-        setWatchlist(data.addToWatchlist.watchlist);
-      }
-      
+  const handleAddToWatchlist = () => {
+    const trimmed = search.trim();
+    if (trimmed !== '' && !watchlist.includes(trimmed)) {
+      setWatchlist((prev) => [...prev, trimmed]);
       setSearch('');
-    } catch (err) {
-      console.error('Error adding to watchlist:', err);
     }
   };
 
