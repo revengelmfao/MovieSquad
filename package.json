@@ -15,12 +15,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-<<<<<<< HEAD
-    "autoprefixer": "^10.4.21",
-    "concurrently": "^8.2.0",
-=======
     "concurrently": "^8.2.2",
->>>>>>> 1a4d91e14f14e26d88589ac927f73860a5b5d783
     "cypress": "^13.13.0",
     "postcss": "^8.5.3",
     "react": "^18.3.1",
