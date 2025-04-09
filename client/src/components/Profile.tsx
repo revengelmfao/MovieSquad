@@ -3,7 +3,7 @@ import { UserProfileData } from "../interfaces/UserProfileData";
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { getAllUsers } from "../api/userAPI";
 import { Link } from "react-router-dom";
-import AvatarCard from './AvatarCard';
+import ImageUploader from './ImageUploader';
 
 
 const   Profile: React.FC = () => {
@@ -72,7 +72,7 @@ const   Profile: React.FC = () => {
       <p style={{ fontStyle: 'italic' }}>Set your preffered display name and other personal settings.</p>
 
 
-      <AvatarCard/>
+      <ImageUploader/>
   
       <p style={{marginTop: 10}}>Username:</p>
       <p>Email:</p>

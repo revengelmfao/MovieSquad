@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const LandingPage = () => {
     interface Movie {
@@ -84,10 +85,8 @@ const LandingPage = () => {
                                         <label htmlFor="password" className="block text-sm font-medium text-gray-900">
                                             Password
                                         </label>
-                                        <div className="text-sm">
-                                            <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                                                Forgot password?
-                                            </a>
+                                        <div className="font-semibold text-indigo-600 hover:text-indigo-500">
+                                            <Link to="/forgotpassword">Forgot Password?</Link>
                                         </div>
                                     </div>
                                     <div className="mt-2">
@@ -114,9 +113,7 @@ const LandingPage = () => {
 
                             <p className="mt-6 text-center text-sm text-gray-500">
                                 Not a member?{' '}
-                                <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                                    Sign Up!
-                                </a>
+                                <Link to="/signup">Sign Up</Link>
                             </p>
                         </div>
                     </div>

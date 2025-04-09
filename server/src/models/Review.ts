@@ -1,7 +1,7 @@
 import { Schema, model, type Document } from 'mongoose';
 
 export interface IReview extends Document {
-    userId: number;     // Changed from user to userId to match resolvers
+    userId: string;     // Changed from user to userId to match resolvers
     movieId: string;    // Changed from movie to movieId to match resolvers
     review: string;
     createdAt: Date;
@@ -9,7 +9,7 @@ export interface IReview extends Document {
 
 const reviewSchema = new Schema<IReview>({
     // Remove _id as MongoDB will generate it automatically
-    userId: { type: Number, required: true },
+    userId: { type: String, required: true },
     movieId: { type: String, required: true },
     review: { type: String, required: true },
 }, {

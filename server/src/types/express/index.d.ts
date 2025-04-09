@@ -1,7 +1,7 @@
 declare namespace Express {
     interface Request {
       user?: {
-        _id: number;
+        _id: string;
         username: string;
         movies: string[];
         watchlist: string[];
