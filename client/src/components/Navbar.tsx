@@ -14,11 +14,6 @@ const Navbar: React.FC = () => {
             Profile
           </Link>
         </li>
-        <li>
-          <Link to="/signin" className="hover:underline">
-            Sign In
-          </Link>
-        </li>
       </ul>
     </nav>
   );

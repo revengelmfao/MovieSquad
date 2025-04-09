@@ -17,9 +17,14 @@ const WatchlistPage: React.FC = () => {
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-  const [isListView, setIsListView] = useState<boolean>(false); // State for toggling views
+  const [isListView, setIsListView] = useState<boolean>(false);
 
   useEffect(() => {
+    const savedViewMode = localStorage.getItem('viewMode');
+    if (savedViewMode) {
+      setIsListView(savedViewMode === 'list');
+    }
+
     const savedWatchlists = localStorage.getItem('watchlist');
     if (savedWatchlists) {
       const watchlist: string[] = JSON.parse(savedWatchlists);
@@ -65,7 +70,6 @@ const WatchlistPage: React.FC = () => {
       setSearch('');
 
       localStorage.setItem(watchlistName || '', JSON.stringify(updatedMovies));
-
       window.location.reload();
     } else {
       alert('This movie is already in your watchlist.');
@@ -77,7 +81,6 @@ const WatchlistPage: React.FC = () => {
     setMovies(updatedMovies);
 
     localStorage.setItem(watchlistName || '', JSON.stringify(updatedMovies));
-
     window.location.reload();
   };
 
@@ -85,39 +88,38 @@ const WatchlistPage: React.FC = () => {
     navigate(`/movie/${id}`);
   };
 
-  // Handle the navigation back to the Profile page
   const handleBackToProfile = () => {
     navigate('/profile');
   };
 
-  // Toggle between list and grid views
   const toggleView = () => {
-    setIsListView(!isListView);
+    const newView = !isListView;
+    setIsListView(newView);
+    localStorage.setItem('viewMode', newView ? 'list' : 'grid');
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Watchlist: {watchlistName}</h1>
+    <div className="min-h-screen min-w-screen bg-gradient-to-r from-orange-400 to-red-500 p-6">
+      <h1 className="text-5xl font-extrabold text-center text-black mb-6">Watchlist: {watchlistName}</h1>
 
-      {/* Button to go back to Profile page */}
       <button
         onClick={handleBackToProfile}
-        className="mb-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl transition duration-200"
+        className="mb-4 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl transition duration-200"
       >
-        Watchlists
+        Go Back to Watchlists
       </button>
 
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-700 mb-2">Search for Movies to Add</h2>
+        <h2 className="text-3xl font-semibold text-black mb-2">Search for Movies to Add</h2>
         <input
           type="text"
           placeholder="Search for a movie..."
           value={search}
           onChange={handleSearch}
-          className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+          className="w-full px-4 py-2 border border-black-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black-500 mb-4 bg-white"
         />
 
-        {loading && <p>Loading search results...</p>}
+        {loading && <p className="text-white">Loading search results...</p>}
 
         {searchResults.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -145,27 +147,27 @@ const WatchlistPage: React.FC = () => {
         )}
       </div>
 
-      {/* Toggle between List and Grid Views */}
       <div className="mb-6 text-center">
         <button
           onClick={toggleView}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl transition duration-200"
+          className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl transition duration-200"
         >
           Toggle to {isListView ? 'Grid' : 'List'} View
         </button>
       </div>
 
       {movies.length === 0 ? (
-        <p className="text-center text-gray-500">No movies in this watchlist yet. Add some movies!</p>
+        <p className="text-center text-black">No movies in this watchlist yet. Add some movies!</p>
       ) : (
         <div>
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Movies in your Watchlist</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">Movies in your Watchlist</h2>
           {isListView ? (
             <ul className="space-y-4">
               {movies.map((movie) => (
                 <li
                   key={movie.imdbID}
-                  className="bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition flex items-center justify-between"
+                  className="cursor-pointer bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition flex items-center justify-between"
+                  onClick={() => handleMovieClick(movie.imdbID)} // Make list items clickable
                 >
                   <div className="flex items-center">
                     <img
@@ -179,7 +181,10 @@ const WatchlistPage: React.FC = () => {
                     </div>
                   </div>
                   <button
-                    onClick={() => handleRemoveFromWatchlist(movie.imdbID)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent click from navigating to movie page
+                      handleRemoveFromWatchlist(movie.imdbID);
+                    }}
                     className="ml-4 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-xl transition"
                   >
                     Remove
@@ -193,7 +198,7 @@ const WatchlistPage: React.FC = () => {
                 <div
                   key={movie.imdbID}
                   className="cursor-pointer bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition"
-                  onClick={() => handleMovieClick(movie.imdbID)}
+                  onClick={() => handleMovieClick(movie.imdbID)} // Keep grid view clickable
                 >
                   <img
                     src={movie.Poster}
