@@ -9,28 +9,24 @@
     "seed": "cd server && npm run seed",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm run dev\"",
     "install": "cd server && npm i && cd ../client && npm i",
-    "build": "cd client && npm run build && cd ../server && npm run build"
+    "build": "cd client && npm run build && cd ../server && npm run build",
+    "dev": "npm run develop"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-<<<<<<< HEAD
-    "autoprefixer": "^10.4.21",
-    "concurrently": "^8.2.0",
-=======
     "concurrently": "^8.2.2",
->>>>>>> f518b33a3f1526da643adaf342f8e155dfdec0e7
     "cypress": "^13.13.0",
-    "postcss": "^8.5.3",
+    "postcss": "^8.4.31",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwindcss": "^4.1.0",
+    "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "axios": "^1.8.4",
     "vitest": "^3.1.1"
   }
 }

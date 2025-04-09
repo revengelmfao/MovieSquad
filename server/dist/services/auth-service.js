@@ -16,12 +16,10 @@ export const authenticateToken = async ({ req }) => {
     }
     try {
         const { data } = jwt.verify(token, secret);
-        // Add logging for debugging
-        console.log('Token verified successfully, user:', data.username);
         return { user: data, token };
     }
-    catch (error) {
-        console.log('Invalid token:', error instanceof Error ? error.message : 'Unknown error');
+    catch {
+        console.log('Invalid token');
         return { user: null, token: null };
     }
 };

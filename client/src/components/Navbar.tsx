@@ -1,19 +1,40 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { useAuth } from '../utils/auth.tsx';
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
+  const { isLoggedIn, logout } = useAuth();
+
   return (
-    <nav style={{ padding: "1rem", background: "#282c34", color: "white" }}>
-      <ul style={{ listStyle: "none", display: "flex", gap: "1rem" }}>
-        <li>
-          <Link to="/" style={{ color: "white", textDecoration: "none" }}>Home</Link>
-        </li>
-        <li>
-          <Link to="/profile" style={{ color: "white", textDecoration: "none" }}>Profile</Link>
-        </li>
-        <li>
-          <Link to="/signin" style={{ color: "white", textDecoration: "none" }}>Sign In</Link>
-        </li>
-      </ul>
+    <nav className="bg-gray-800 text-white p-4">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link to="/" className="text-xl font-bold">
+          Movie Squad
+        </Link>
+        
+        <div className="space-x-4">
+          <Link to="/" className="hover:text-orange-500">
+            Home
+          </Link>
+          
+          {isLoggedIn ? (
+            <>
+              <Link to="/profile" className="hover:text-orange-500">
+                Profile
+              </Link>
+              <button 
+                onClick={logout} 
+                className="hover:text-orange-500"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link to="/signin" className="hover:text-orange-500">
+              Sign In
+            </Link>
+          )}
+        </div>
+      </div>
     </nav>
   );
 };

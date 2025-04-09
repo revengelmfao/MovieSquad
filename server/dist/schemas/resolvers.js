@@ -1,6 +1,5 @@
 import { User, Movie } from "../models/index.js";
 import { signToken, AuthenticationError } from "../services/auth-service.js";
-import { getDatabaseStats } from "../utils/atlas-utils.js";
 const resolvers = {
     Query: {
         me: async (_, __, context) => {
@@ -59,9 +58,6 @@ const resolvers = {
             }
             return user.reviews;
         },
-        databaseStats: async () => {
-            return await getDatabaseStats();
-        }
     },
     Mutation: {
         createUser: async (_, { username, email, password }) => {

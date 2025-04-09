@@ -1,3 +1,4 @@
+
 import connectDB from './config/connection.js';
 import { User, Movie } from './models/index.js';
 import userData from './seeds/userData.json' with { type: 'json' };
