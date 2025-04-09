@@ -28,8 +28,6 @@ const WatchlistPage: React.FC = () => {
 
   useEffect(() => {
 
-    const savedWatchlists = localStorage.getItem("watchlist");
-
     const savedViewMode = localStorage.getItem('viewMode');
     if (savedViewMode) {
       setIsListView(savedViewMode === 'list');
