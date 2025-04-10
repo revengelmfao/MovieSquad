@@ -19,7 +19,8 @@
     "cypress": "^13.13.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "rollup": "3.29.4"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.1",
