@@ -57,7 +57,7 @@ const Profile: React.FC = () => {
   // Show login message if not logged in
   if (!loggedIn) {
     return (
-      <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+      <div className="min-w-screen min-h-screen bg-gray-100 p-6 flex flex-col items-center bg-gradient-to-r from-orange-400 to-red-600">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">Profile Page</h1>
         <div className="bg-white rounded-lg shadow-md p-6">
           <p className="text-lg">Please log in to view your profile.</p>
