@@ -4,32 +4,25 @@
   "description": "MovieSquad - A movie review app",
   "main": "server/server.js",
   "scripts": {
-    "render-build": "cd server && npm ci && npm run build && cd ../client && npm ci --omit=optional && npm run build",
+    "render-build": "cd server && npm install && npm run build && cd ../client && npm install && npm run build",
     "start": "cd server && npm start",
     "seed": "cd server && npm run seed",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm run dev\"",
     "install": "cd server && npm i && cd ../client && npm i",
-    "build": "cd client && npm run build && cd ../server && npm run build",
-    "dev": "npm run develop"
+    "build": "cd client && npm run build && cd ../server && npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "engines": {
-    "node": "18.x"
-  },
   "devDependencies": {
     "concurrently": "^8.2.2",
     "cypress": "^13.13.0",
-    "postcss": "^8.4.31",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.1",
-    "axios": "^1.8.4",
     "vitest": "^3.1.1"
   }
 }
