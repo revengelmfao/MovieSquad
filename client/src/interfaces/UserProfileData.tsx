@@ -2,9 +2,9 @@
 
 export interface UserProfileData {
   userId: number | null,   
-  username: string | null,
+  username: string, 
   email: string | null, 
   bio: string | null, 
-  image: string | undefined,
+  Avatar: string | undefined,
 
 }
