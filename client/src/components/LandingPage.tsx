@@ -39,13 +39,13 @@ const LandingPage = () => {
             className="min-w-screen flex flex-col bg-cover bg-center"
             style={{ backgroundImage: 'url(/images/backgroundimg.avif)' }} 
         >
-            <div className="flex flex-col items-center mb-6 px-4">
-                <h1 className="text-4xl sm:text-6xl md:text-8xl text-center font-bold mb-3 pt-8 text-white">Movie Squad</h1>
+            <div className="flex flex-col items-center mb-4 px-2">
+                <h1 className="text-8xl text-center font-bold mb-2 pt-6 bg-gradient-to-r from-red-500 to-orange-500 text-transparent bg-clip-text">Movie Squad</h1>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-8 px-4">
-                <div className="bg-orange-500 text-black rounded-lg text-center w-full lg:w-2/3 flex items-center justify-center py-8">
-                    <p className="font-bold text-3xl sm:text-5xl lg:text-6xl">
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 mb-6 px-2">
+                <div className="bg-gradient-to-r from-orange-400 to-red-600 text-black rounded-md text-center w-full lg:w-2/3 flex items-center justify-center py-4">
+                    <p className="font-bold lg:text-6xl leading-snug">
                         Discover new movies
                         <br />Create Watch list
                         <br />Collaborate with Movie lovers!
@@ -53,18 +53,18 @@ const LandingPage = () => {
                 </div>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl text-center font-bold mb-4 text-white">Top Rated Movies</h1>
+            <h1 className="text-2xl sm:text-3xl text-center font-bold mb-3 text-white">Top Rated Movies</h1>
 
-            <div className="flex flex-wrap justify-center gap-4 mb-8 px-4">
+            <div className="flex flex-wrap justify-center gap-3 mb-6 px-2">
                 {movies.map((movie) => (
-                    <div key={movie.imdbID} className="bg-gray-800 p-4 rounded-lg w-full sm:w-72 md:w-80 lg:w-96">
+                    <div key={movie.imdbID} className="bg-gray-800 p-3 rounded-md w-40 sm:w-56 md:w-64">
                         <img
                             src={movie.Poster || '/images/default-poster.jpg'} 
                             alt={movie.Title}
-                            className="w-full h-80 object-cover rounded-md"
+                            className="w-full h-48 object-cover rounded-sm"
                         />
-                        <h2 className="text-xl text-white mt-4">{movie.Title}</h2>
-                        <p className="text-gray-400">IMDb Rating: {movie.imdbRating || 'N/A'}</p>
+                        <h2 className="text-base text-white mt-2">{movie.Title}</h2>
+                        <p className="text-xs text-gray-400">IMDb Rating: {movie.imdbRating || 'N/A'}</p>
                     </div>
                 ))}
             </div>
