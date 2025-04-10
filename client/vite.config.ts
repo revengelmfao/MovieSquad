@@ -32,10 +32,12 @@ export default defineConfig({
   build: {
     // Enable CSS extraction
     cssCodeSplit: true,
-    // More explicit rollup options for external CSS
+    // Disable native modules in rollup
     rollupOptions: {
-      // Explicitly include bootstrap in the build
       external: [],
+      // Explicitly disable native plugins
+      context: 'globalThis',
+      plugins: [],
       output: {
         manualChunks: (id) => {
           if (id.includes('node_modules/bootstrap')) {
