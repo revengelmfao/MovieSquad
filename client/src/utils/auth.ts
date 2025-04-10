@@ -6,8 +6,8 @@ class AuthService {
     if (!token) return null;
     try {
       return jwtDecode(token);
-    } catch (e) {
-      console.error('Invalid token', e);
+    } catch (err) {
+      console.error('Invalid token', err);
       return null;
     }
   }
@@ -20,12 +20,8 @@ class AuthService {
   isTokenExpired(token: string) {
     try {
       const decoded: any = jwtDecode(token);
-      if (decoded.exp < Date.now() / 1000) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (err) {
+      return decoded.exp < Date.now() / 1000;
+    } catch {
       return false;
     }
   }
