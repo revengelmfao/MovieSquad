@@ -15,17 +15,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@apollo/client": "^3.10.6",
     "concurrently": "^8.2.2",
     "postcss": "^8.5.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwindcss": "^4.1.0",
-    "ts-node": "^10.9.2",
-    "@apollo/client": "^3.10.6"
-
+    "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.0",
     "@vitejs/plugin-react": "^4.3.1",
     "vitest": "^3.1.1"
   }
