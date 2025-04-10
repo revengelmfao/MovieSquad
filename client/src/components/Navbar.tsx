@@ -5,7 +5,7 @@ const Navbar = () => {
   const { isLoggedIn, logout } = useAuth();
 
   return (
-    <nav className="bg-gray-800 text-white p-4">
+    <nav className="bg-gray-800 text-white p-4 min-w-screen">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-xl font-bold">
           Movie Squad
