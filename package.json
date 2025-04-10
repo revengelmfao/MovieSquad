@@ -3,11 +3,8 @@
   "version": "1.0.0",
   "description": "MovieSquad - A movie review app",
   "main": "server/server.js",
-  "engines": {
-    "node": "18.x"
-  },
   "scripts": {
-    "render-build": "cd server && NODE_ENV=production npm ci && npm run build && cd ../client && ROLLUP_NATIVE=false npm ci --omit=optional && npm run build",
+    "render-build": "cd server && npm install && npm run build && cd ../client && npm install && npm run build",
     "start": "cd server && npm start",
     "seed": "cd server && npm run seed",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm run dev\"",
