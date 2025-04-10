@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 const LandingPage = () => {
     interface Movie {
@@ -15,10 +14,12 @@ const LandingPage = () => {
         const fetchTopRatedMovies = async () => {
             const apiKey = '22f90598'; 
             try {
-                const response = await axios.get(`http://www.omdbapi.com/?apikey=${apiKey}&s=movie&type=movie`);
-                console.log(response.data);  
-                if (response.data.Response === 'True') {
-                    const sortedMovies = response.data.Search.sort((a: Movie, b: Movie) => {
+                const response = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=movie&type=movie`);
+                const data = await response.json();
+                console.log(data);  
+                
+                if (data.Response === 'True') {
+                    const sortedMovies = data.Search.sort((a: Movie, b: Movie) => {
                         return parseFloat(b.imdbRating) - parseFloat(a.imdbRating);
                     });
                     setMovies(sortedMovies);
@@ -49,77 +50,6 @@ const LandingPage = () => {
                         <br />Create Watch list
                         <br />Collaborate with Movie lovers!
                     </p>
-                </div>
-                <div className="bg-orange-500 rounded-lg flex flex-1 flex-col justify-center px-4 py-6 h-full">
-                    <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                        <img
-                            alt="Your Company"
-                            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                            className="mx-auto h-8 w-auto"
-                        />
-                        <h2 className="mt-6 text-center text-lg font-bold tracking-tight text-gray-900">
-                            Sign in to your account
-                        </h2>
-
-                        <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm">
-                            <form action="#" method="POST" className="space-y-4">
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-900">
-                                        Email address
-                                    </label>
-                                    <div className="mt-2">
-                                        <input
-                                            id="email"
-                                            name="email"
-                                            type="email"
-                                            required
-                                            autoComplete="email"
-                                            className="block w-full rounded-md bg-white px-3 py-1 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div className="flex items-center justify-between">
-                                        <label htmlFor="password" className="block text-sm font-medium text-gray-900">
-                                            Password
-                                        </label>
-                                        <div className="text-sm">
-                                            <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                                                Forgot password?
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div className="mt-2">
-                                        <input
-                                            id="password"
-                                            name="password"
-                                            type="password"
-                                            required
-                                            autoComplete="current-password"
-                                            className="block w-full rounded-md bg-white px-3 py-1 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <button
-                                        type="submit"
-                                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600"
-                                    >
-                                        Sign in
-                                    </button>
-                                </div>
-                            </form>
-
-                            <p className="mt-6 text-center text-sm text-gray-500">
-                                Not a member?{' '}
-                                <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                                    Sign Up!
-                                </a>
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </div>
 

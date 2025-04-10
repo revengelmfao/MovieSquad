@@ -1,13 +1,11 @@
 import express from 'express';
-const router = express.Router();
 import userRoutes from './userRoutes.js';
+import databaseRoutes from './databaseRoutes.js';
 
-// Register all route modules
+const router = express.Router();
+
+// Mount routes
 router.use('/users', userRoutes);
-
-// Add debug route
-router.get('/test', (req, res) => {
-  res.json({ message: 'API routes are working' });
-});
+router.use('/db', databaseRoutes);
 
 export default router;

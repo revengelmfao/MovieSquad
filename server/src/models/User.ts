@@ -1,8 +1,8 @@
 import { Schema, model, type Document } from "mongoose";
 import bcrypt from "bcrypt";
-import Movie, { movieSchema, type IMovie } from "./Movie.js";
+import { movieSchema, IMovie } from "./Movie.js";
 
-interface IUser extends Document {
+export interface IUser extends Document {
   userId: string;
   username: string;
   email: string;
@@ -21,6 +21,7 @@ const userSchema = new Schema<IUser>({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  // This uses the schema, not the model - fixes the invalid model error
   savedMovies: [movieSchema],
   watchlist: [{ type: String }],
   ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
@@ -28,21 +29,18 @@ const userSchema = new Schema<IUser>({
   createdAt: { type: Date, default: Date.now },
 },
 {
-    timestamps: true,
-    toJSON: { virtuals: true },
-}
-);
+  timestamps: true,
+  toJSON: { virtuals: true },
+});
 
 userSchema.pre("save", async function (next) {
   if (this.isNew || this.isModified("password")) {
     const saltRounds = 10;
     this.password = await bcrypt.hash(this.password, saltRounds);
   }
-
   next();
 });
 
-// Rename comparePassword to isCorrectPassword to match interface
 userSchema.methods.isCorrectPassword = async function (password: string): Promise<boolean> {
   return await bcrypt.compare(password, this.password);
 };

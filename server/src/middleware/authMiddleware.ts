@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { TokenUser } from '../services/auth-service.js';
+import { TokenUser } from '../services/auth.js'; // Fix import
 
 const secret = process.env.JWT_SECRET || 'secretkey';
 
@@ -18,8 +18,17 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction):
     // Verify token
     const { data } = jwt.verify(token, secret) as { data: TokenUser };
     
-    // Use a more forceful type assertion to bypass the type checking
-    (req as any).user = data;
+    // Fix: Don't try to access properties that don't exist in TokenUser
+    // Instead, only attach what's available in the token
+    (req as any).user = {
+      _id: data._id,
+      username: data.username,
+      email: data.email,
+      // Provide default empty arrays instead of trying to access non-existent properties
+      movies: [],
+      watchlist: [],
+      savedMovies: []
+    };
     
     next();
   } catch (err) {

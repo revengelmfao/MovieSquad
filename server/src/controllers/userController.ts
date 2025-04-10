@@ -1,116 +1,164 @@
-import { Request, Response } from 'express';
-import { User, Movie } from '../models/index.js';
+import type { Request, Response } from 'express';
+// import user model and interface
+import User, { IUser } from '../models/User.js';
+// import sign token function from auth
+import { signToken } from '../services/auth.js';
 
-// Get all users
-export const getAllUsers = async (_req: Request, res: Response) => {
-    try {
-        console.log('Getting all users...');
-        const users = await User.find();
-        console.log(`Found ${users.length} users`);
-        return res.json(users);
-    } catch (err) {
-        console.error('Error in getAllUsers:', err);
-        return res.status(500).json({ message: 'Error retrieving users', error: err });
-    }
+// get a single user by either their id or their username
+export const getSingleUser = async (req: Request, res: Response) => {
+  const foundUser = await User.findOne({
+    $or: [{ _id: req.user ? req.user._id : req.params.id }, { username: req.params.username }],
+  });
+
+  if (!foundUser) {
+    return res.status(400).json({ message: 'Cannot find a user with this id!' });
+  }
+
+  return res.json(foundUser);
 };
 
-// Get single user by ID
-export const getUserById = async (req: Request, res: Response) => {
-    const { userId } = req.params;
-    try {
-        const user = await User.findById(userId)
-        if (!user) {
-            return res.status(404).json({ message: 'No user found with this id!' });
-        }
-
-        return res.json(user);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-
-// Create a new user
+// create a user, sign a token, and send it back (to client/src/components/SignUpForm.js)
 export const createUser = async (req: Request, res: Response) => {
-    try {
-        const user = await User.create(req.body);
-        res.json(user);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+  const user = await User.create(req.body) as IUser;
+
+  if (!user) {
+    return res.status(400).json({ message: 'Something is wrong!' });
+  }
+  
+  const token = signToken({ 
+    username: user.username, 
+    email: user.email, 
+    _id: user.id.toString() 
+  });
+  return res.json({ token, user });
 };
 
-// Update a user
+// login a user, sign a token, and send it back (to client/src/components/LoginForm.js)
+// {body} is destructured req.body
+export const login = async (req: Request, res: Response) => {
+  const user = await User.findOne({ 
+    $or: [{ username: req.body.username }, { email: req.body.email }] 
+  }) as IUser;
+  
+  if (!user) {
+    return res.status(400).json({ message: "Can't find this user" });
+  }
+
+  const correctPw = await user.isCorrectPassword(req.body.password);
+
+  if (!correctPw) {
+    return res.status(400).json({ message: 'Wrong password!' });
+  }
+  
+  const token = signToken({ 
+    username: user.username, 
+    email: user.email, 
+    _id: user.id.toString() 
+  });
+  return res.json({ token, user });
+};
+
+// save a movie to a user's savedMovies
+export const saveMovie = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized: No user found' });
+    }
+    
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: req.user._id },
+      { $addToSet: { savedMovies: req.body } },
+      { new: true, runValidators: true }
+    );
+    return res.json(updatedUser);
+  } catch (err) {
+    console.error('Error saving movie:', err);
+    return res.status(400).json(err);
+  }
+};
+
+// remove a movie from savedMovies
+export const deleteMovie = async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Unauthorized: No user found' });
+  }
+  
+  const updatedUser = await User.findOneAndUpdate(
+    { _id: req.user._id },
+    { $pull: { savedMovies: { movieId: req.params.movieId } } },
+    { new: true }
+  );
+  if (!updatedUser) {
+    return res.status(404).json({ message: "Couldn't find user with this id!" });
+  }
+  return res.json(updatedUser);
+};
+
+// get all users
+export const getAllUsers = async (_req: Request, res: Response) => {
+  try {
+    const users = await User.find({});
+    return res.json(users);
+  } catch (err) {
+    console.error('Error retrieving users:', err);
+    return res.status(500).json({ message: 'Error retrieving users', error: err });
+  }
+};
+
+// get user by id
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    return res.json(user);
+  } catch (err) {
+    console.error('Error retrieving user:', err);
+    return res.status(500).json({ message: 'Error retrieving user', error: err });
+  }
+};
+
+// update user
 export const updateUser = async (req: Request, res: Response) => {
-    try {
-        const user = await User.findByIdAndUpdate(
-            req.params.userId,
-            req.body,
-            { new: true, runValidators: true }
-        );
-
-        if (!user) {
-            return res.status(404).json({ message: 'No user found with this id!' });
-        }
-
-        return res.json(user);
-    } catch (err) {
-        return res.status(500).json(err);
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized: No user found' });
     }
+    
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    return res.json(updatedUser);
+  } catch (err) {
+    console.error('Error updating user:', err);
+    return res.status(500).json({ message: 'Error updating user', error: err });
+  }
 };
 
-// Delete a user
+// delete user
 export const deleteUser = async (req: Request, res: Response) => {
-    try {
-        const user = await User.findByIdAndDelete(req.params.userId);
-
-        if (!user) {
-            return res.status(404).json({ message: 'No user found with this id!' });
-        }
-
-        // Remove user's associated movies
-        // Assuming Movie is the model for the movies collection
-        await Movie.deleteMany({ username: user.username });
-
-        return res.json({ message: 'User and associated thoughts deleted!' });
-    } catch (err) {
-        return res.status(500).json(err);
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized: No user found' });
     }
-};
-
-// Add a friend
-export const addFriend = async (req: Request, res: Response) => {
-    try {
-        const user = await User.findByIdAndUpdate(
-            req.params.userId,
-            { $addToSet: { friends: req.params.friendId } },
-            { new: true }
-        );
-
-        if (!user) {
-            return res.status(404).json({ message: 'No user found with this id!' });
-        }
-
-        return res.json(user);
-    } catch (err) {
-        return res.status(500).json(err);
+    
+    const deletedUser = await User.findByIdAndDelete(req.params.userId);
+    
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
     }
-};
-
-// Remove a friend
-export const removeFriend = async (req: Request, res: Response) => {
-    try {
-        const user = await User.findByIdAndUpdate(
-            req.params.userId,
-            { $pull: { friends: req.params.friendId } },
-            { new: true }
-        );
-
-        if (!user) {
-            return res.status(404).json({ message: 'No user found with this id!' });
-        }
-
-        return res.json(user);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
+    
+    return res.json({ message: 'User deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    return res.status(500).json({ message: 'Error deleting user', error: err });
+  }
 };

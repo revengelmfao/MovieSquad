@@ -3,8 +3,10 @@ import { Request } from 'express';
 import { ApolloServerErrorCode } from '@apollo/server/errors';
 import { GraphQLError } from 'graphql';
 import dotenv from 'dotenv';
-// Fix the import path
 import type { ExpressContextFunctionArgument } from '@apollo/server/express4';
+// Import the IMovie interface
+import { IMovie } from '../models/Movie.js';
+
 dotenv.config();
 
 const secret = process.env.JWT_SECRET || 'secretkey';
@@ -14,6 +16,9 @@ export interface TokenUser {
   username: string;
   email: string;
   _id: string;
+  // Now IMovie is properly imported
+  watchlist?: string[];
+  savedMovies?: IMovie[];
 }
 
 // Define the UserContext interface used by Apollo Server
@@ -43,8 +48,8 @@ export const authenticateToken = async ({ req }: ExpressContextFunctionArgument)
   }
 }
 
-export const signToken = ({ username, email, _id }: TokenUser) => {
-  const payload = { username, email, _id };
+export const signToken = (userData: TokenUser): string => {
+  const payload = { username: userData.username, email: userData.email, _id: userData._id };
   return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
 };
 
@@ -58,3 +63,6 @@ export class AuthenticationError extends GraphQLError {
     });
   }
 }
+
+// Alias for backward compatibility
+export type UserType = TokenUser;

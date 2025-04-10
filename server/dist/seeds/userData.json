@@ -1,0 +1,17 @@
+[
+    {
+        "username": "Movie_Squad",
+        "email": "MovieSquad@Team3.com",
+        "password": "password123"
+    },
+    {
+        "username": "Cinema_Lover",
+        "email": "cinemalover@example.com",
+        "password": "password123"
+    },
+    {
+        "username": "Film_Buff",
+        "email": "filmbuff@example.com",
+        "password": "password123"
+    }
+]

@@ -29,8 +29,20 @@ const seedDatabase = async (): Promise<void> => {
     
     // Create users from userData.json
     console.log('Creating users...');
-    const users = await Promise.all(
-      userData.map(async (user) => {
+    
+    // Add a default admin user for testing
+    const adminUser = {
+      userId: 'admin' + Date.now().toString(),
+      username: 'admin',
+      email: 'admin@movieapp.com',
+      password: 'adminPassword123', // Will be encrypted by the User model pre-save hook
+      watchlist: movies.length > 0 ? [movies[0].movieId] : [],
+      savedMovies: movies.length > 0 ? [movies[0]] : []
+    };
+    
+    const users = await Promise.all([
+      User.create(adminUser),
+      ...userData.map(async (user) => {
         // Generate userId for each user
         const userId = user.username.toLowerCase().replace(/\s/g, '') + Date.now().toString();
         
@@ -45,12 +57,12 @@ const seedDatabase = async (): Promise<void> => {
           savedMovies: movies.length > 0 ? [movies[0]] : []
         };
         
-        const newUser = await User.create(userWithPassword);
-        return newUser;
+        return User.create(userWithPassword);
       })
-    );
+    ]);
     
     console.log(`${users.length} users created with movies in their collections`);
+    console.log('Admin user created for testing - username: admin, password: adminPassword123');
     console.log('Seeding completed successfully!');
     process.exit(0);
   } catch (error) {
