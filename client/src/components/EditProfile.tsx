@@ -64,7 +64,7 @@ const handleDelete = (e: FormEvent) => {
   
 return (
       
-    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+    <div className="min-w-screen min-h-screen bg-gray-100 p-6 flex flex-col items-center bg-gradient-to-r from-orange-400 to-red-600">
      <h1 className="text-3xl font-bold text-gray-800 mb-4">Profile Details</h1>
   
      <div className="w-full max-w-xl bg-white rounded-2xl shadow-md p-6 mb-6">

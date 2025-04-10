@@ -2,7 +2,9 @@ import { Link } from "react-router-dom"
 
 const SignIn: React.FC = () => {
     return (
-      <div>
+      <div
+      
+      >
                 <div className="bg-orange-500 rounded-lg flex min-h-[60vh] flex-1 flex-col justify-center px-4 py-6 lg:px-4 w-full md:w-1/2 lg:w-1/3 xl:w-1/4">
                     <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                         <img

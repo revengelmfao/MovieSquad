@@ -72,9 +72,9 @@ const   Profile: React.FC = () => {
       <p style={{ fontStyle: 'italic' }}>Set your preffered display name and other personal settings.</p>
       
 
-
+      <div>
       <ImageUploader/>
-  
+      </div>
       
       <div className="flex flex-wrap justify-center gap-4 mb-8 px-4">
       {userProfile.map((user) => (
