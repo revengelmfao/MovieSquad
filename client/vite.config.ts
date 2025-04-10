@@ -1,18 +1,10 @@
-import { defineConfig } from 'vitest/config'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
-import tailwindcss from '@tailwindcss/vite'
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    tailwindcss(),
-    react()
-  ],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/_tests_/setup.ts'
-  },
+  plugins: [react()],
   server: {
     port: 3000,
     open: true,
@@ -21,28 +13,29 @@ export default defineConfig({
         target: 'http://localhost:3001',
         secure: false,
         changeOrigin: true
+      },
+      '/graphql': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
       }
     }
   },
   resolve: {
     alias: {
-      'bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
+      // Add any aliases you need
     }
   },
   build: {
-    // Enable CSS extraction
-    cssCodeSplit: true,
-    // More explicit rollup options for external CSS
-    rollupOptions: {
-      // Explicitly include bootstrap in the build
-      external: [],
-      output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules/bootstrap')) {
-            return 'bootstrap';
-          }
-        },
-      },
-    },
+    outDir: 'dist',
+    sourcemap: true,
+    commonjsOptions: {
+      include: [/node_modules/],
+      extensions: ['.js', '.cjs'],
+      strictRequires: true,
+    }
+  },
+  optimizeDeps: {
+    include: ['axios']
   }
 })

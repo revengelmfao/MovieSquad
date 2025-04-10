@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const LandingPage = () => {
@@ -13,9 +13,10 @@ const LandingPage = () => {
 
     useEffect(() => {
         const fetchTopRatedMovies = async () => {
-            const apiKey = '22f90598';
+            const apiKey = '22f90598'; 
             try {
                 const response = await axios.get(`http://www.omdbapi.com/?apikey=${apiKey}&s=movie&type=movie`);
+                console.log(response.data);  
                 if (response.data.Response === 'True') {
                     const sortedMovies = response.data.Search.sort((a: Movie, b: Movie) => {
                         return parseFloat(b.imdbRating) - parseFloat(a.imdbRating);
@@ -34,92 +35,35 @@ const LandingPage = () => {
 
     return (
         <div
-            className=" min-h-screen min-w-screen flex flex-col bg-cover bg-center"
-            style={{ backgroundImage: 'url(/images/backgroundimg.avif)' }}
+            className="min-w-screen flex flex-col bg-cover bg-center"
+            style={{ backgroundImage: 'url(/images/backgroundimg.avif)' }} 
         >
-            <div className="flex flex-col items-center mb-3 px-1">
-                <h1 className="text-lg sm:text-4xl md:text-6xl text-center font-bold mb-2 pt-4 text-white">Movie Squad</h1>
+            <div className="flex flex-col items-center mb-6 px-4">
+                <h1 className="text-4xl sm:text-6xl md:text-8xl text-center font-bold mb-3 pt-8 text-white">Movie Squad</h1>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 mb-5 px-1">
-                <div className="bg-orange-500 text-black rounded-md text-center w-full lg:w-2/3 flex items-center justify-center py-2 px-1">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-8 px-4">
+                <div className="bg-orange-500 text-black rounded-lg text-center w-full lg:w-2/3 flex items-center justify-center py-8">
                     <p className="font-bold text-3xl sm:text-5xl lg:text-6xl">
-                        Discover New Movies
-                        <br />Create Watch Lists
-                        <br />Collaborate With Movie Lovers!
+                        Discover new movies
+                        <br />Create Watch list
+                        <br />Collaborate with Movie lovers!
                     </p>
                 </div>
-
-                <div className="bg-orange-500 rounded-md flex flex-1 flex-col justify-center px-2 py-3">
-                    <div className="sm:mx-auto sm:w-full sm:max-w-xs">
-                        <h2 className="mt-3 text-center text-lg font-bold tracking-tight text-gray-900">
-                            Sign in to your account
-                        </h2>
-
-                        <form action="#" method="POST" className="space-y-2 mt-3">
-                            <div>
-                                <label htmlFor="email" className="block text-xs font-medium text-gray-900">
-                                    Email address
-                                </label>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    required
-                                    autoComplete="email"
-                                    className="mt-1 block w-full rounded-md bg-white px-1 py-1 text-xs text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600"
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="password" className="block text-xs font-medium text-gray-900">
-                                    Password
-                                </label>
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    required
-                                    autoComplete="current-password"
-                                    className="mt-1 block w-full rounded-md bg-white px-1 py-1 text-xs text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600"
-                                />
-                                <div className="text-xs text-right mt-1">
-                                    <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                                        Forgot password?
-                                    </a>
-                                </div>
-                            </div>
-
-                            <button
-                                type="submit"
-                                className="w-full justify-center rounded-md bg-indigo-600 px-1 py-1 text-xs font-semibold text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600"
-                            >
-                                Sign in
-                            </button>
-                        </form>
-
-                        <p className="mt-3 text-center text-xs text-gray-500">
-                            Not a member?{' '}
-                            <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                                Sign Up!
-                            </a>
-                        </p>
-                    </div>
-                </div>
             </div>
 
-            <h1 className="text-xl sm:text-2xl text-center font-bold mb-2 text-white">Top Rated Movies</h1>
+            <h1 className="text-4xl sm:text-5xl text-center font-bold mb-4 text-white">Top Rated Movies</h1>
 
-            <div className="flex flex-wrap justify-center gap-2 mb-5 px-1">
+            <div className="flex flex-wrap justify-center gap-4 mb-8 px-4">
                 {movies.map((movie) => (
-                    <div key={movie.imdbID} className="bg-gray-800 p-2 rounded-md w-full sm:w-48 md:w-56">
+                    <div key={movie.imdbID} className="bg-gray-800 p-4 rounded-lg w-full sm:w-72 md:w-80 lg:w-96">
                         <img
-                            src={movie.Poster || '/images/default-poster.jpg'}
+                            src={movie.Poster || '/images/default-poster.jpg'} 
                             alt={movie.Title}
-                            className="w-full h-48 object-cover rounded"
+                            className="w-full h-80 object-cover rounded-md"
                         />
-                        <h2 className="text-sm text-white mt-2">{movie.Title}</h2>
-                        <p className="text-xs text-gray-400">IMDb Rating: {movie.imdbRating || 'N/A'}</p>
+                        <h2 className="text-xl text-white mt-4">{movie.Title}</h2>
+                        <p className="text-gray-400">IMDb Rating: {movie.imdbRating || 'N/A'}</p>
                     </div>
                 ))}
             </div>

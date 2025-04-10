@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Rubik', sans-serif;
+  height: 100%;
+}
+
+/* Container styles */
+#root {
+  min-height: 100vh;
+}
+
+/* Add any other global styles you need here */

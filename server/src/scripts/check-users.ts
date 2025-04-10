@@ -1,3 +1,4 @@
+
 import connectDB from '../config/connection.js';
 import { User } from '../models/index.js';
 
