@@ -4,7 +4,7 @@
   "description": "MovieSquad - A movie review app",
   "main": "server/server.js",
   "scripts": {
-    "render-build": "cd server && npm install && npm run build && cd ../client && npm install --force && npm install @rollup/rollup-linux-x64-gnu && npm run build",
+    "render-build": "cd server && npm install && npm run build && cd ../client && npm install --force && npm install @rollup/rollup-linux-x64-gnu @esbuild/linux-x64 && npm run build",
     "start": "cd server && npm start",
     "seed": "cd server && npm run seed",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm run dev\"",
