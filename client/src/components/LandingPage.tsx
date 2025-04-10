@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 const LandingPage = () => {
     interface Movie {
@@ -15,10 +14,12 @@ const LandingPage = () => {
         const fetchTopRatedMovies = async () => {
             const apiKey = '22f90598'; 
             try {
-                const response = await axios.get(`http://www.omdbapi.com/?apikey=${apiKey}&s=movie&type=movie`);
-                console.log(response.data);  
-                if (response.data.Response === 'True') {
-                    const sortedMovies = response.data.Search.sort((a: Movie, b: Movie) => {
+                const response = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=movie&type=movie`);
+                const data = await response.json();
+                console.log(data);  
+                
+                if (data.Response === 'True') {
+                    const sortedMovies = data.Search.sort((a: Movie, b: Movie) => {
                         return parseFloat(b.imdbRating) - parseFloat(a.imdbRating);
                     });
                     setMovies(sortedMovies);

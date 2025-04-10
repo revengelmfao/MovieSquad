@@ -1,10 +1,17 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react()
+  ],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/_tests_/setup.ts'
+  },
   server: {
     port: 3000,
     open: true,
@@ -13,29 +20,26 @@ export default defineConfig({
         target: 'http://localhost:3001',
         secure: false,
         changeOrigin: true
-      },
-      '/graphql': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        secure: false,
       }
     }
   },
   resolve: {
     alias: {
-      // Add any aliases you need
+      'bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
+      '@': path.resolve(__dirname, './src'),
     }
   },
   build: {
-    outDir: 'dist',
-    sourcemap: true,
-    commonjsOptions: {
-      include: [/node_modules/],
-      extensions: ['.js', '.cjs'],
-      strictRequires: true,
+    // Enable CSS extraction
+    cssCodeSplit: true,
+    // Simplified rollup options without axios-specific configuration
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom']
+          // Removed axios chunk as we're not using axios anymore
+        }
+      }
     }
-  },
-  optimizeDeps: {
-    include: ['axios']
   }
 })

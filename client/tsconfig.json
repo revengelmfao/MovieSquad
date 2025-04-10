@@ -7,7 +7,7 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "bundler", // This may need to be "node" or "nodeNext"
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -18,12 +18,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "esModuleInterop": true, // Add this line to ensure compatibility with CommonJS modules
-    "allowSyntheticDefaultImports": true, // Add this to allow default imports from modules with no default export
-
-    /* Type Declarations */
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
