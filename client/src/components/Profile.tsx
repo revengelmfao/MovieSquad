@@ -103,7 +103,7 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+    <div className="min-w-screen min-h-screen bg-gray-100 p-6 flex flex-col items-center bg-gradient-to-r from-orange-400 to-red-600">
       <h1 className="text-3xl font-bold text-gray-800 mb-4">Profile Page</h1>
 
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-md p-6 mb-6">
@@ -131,7 +131,7 @@ const Profile: React.FC = () => {
       </div>
 
       {/* Watchlist Section */}
-      <div className="relative w-full max-w-xl mb-6">
+      <div className="relative w-full max-w-xl">
         <button
           onClick={toggleDropdown}
           className="w-full bg-gray-800 text-white py-2 px-4 rounded-xl text-left font-semibold hover:bg-gray-700 transition"
