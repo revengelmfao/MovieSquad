@@ -28,7 +28,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-cover bg-center" style={{ backgroundImage: 'url(/images/backgroundimg.avif)' }}>
+    <div className="flex min-h-screen bg-cover bg-center min-w-screen" style={{ backgroundImage: 'url(/images/backgroundimg.avif)' }}>
       <div className="m-auto w-full max-w-md">
         <div className="bg-orange-500 rounded-lg px-8 py-10 shadow-xl">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
