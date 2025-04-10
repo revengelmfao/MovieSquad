@@ -89,9 +89,17 @@ If not, add these lines **manually** to prevent accidental commits of API keys.
 #### 🔹 **Returns**: A list of movies.
 ```json
 [
-  {
-    
-  }
+    {
+        "movieId": "1",
+        "title": "Inception",
+        "posterPath": "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
+        "description": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
+        "releaseDate": "2010-07-16",
+        "year": 2010,
+        "director": "Christopher Nolan",
+        "actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page"],
+        "genres": ["Sci-Fi", "Action", "Thriller"]
+    }
 ]
 ```
 
