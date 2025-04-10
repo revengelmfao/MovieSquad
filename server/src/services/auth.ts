@@ -4,6 +4,9 @@ import { ApolloServerErrorCode } from '@apollo/server/errors';
 import { GraphQLError } from 'graphql';
 import dotenv from 'dotenv';
 import type { ExpressContextFunctionArgument } from '@apollo/server/express4';
+// Import the IMovie interface
+import { IMovie } from '../models/Movie.js';
+
 dotenv.config();
 
 const secret = process.env.JWT_SECRET || 'secretkey';
@@ -13,6 +16,9 @@ export interface TokenUser {
   username: string;
   email: string;
   _id: string;
+  // Now IMovie is properly imported
+  watchlist?: string[];
+  savedMovies?: IMovie[];
 }
 
 // Define the UserContext interface used by Apollo Server

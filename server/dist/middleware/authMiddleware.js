@@ -11,8 +11,17 @@ export const authMiddleware = (req, res, next) => {
     try {
         // Verify token
         const { data } = jwt.verify(token, secret);
-        // Use a more forceful type assertion to bypass the type checking
-        req.user = data;
+        // Fix: Don't try to access properties that don't exist in TokenUser
+        // Instead, only attach what's available in the token
+        req.user = {
+            _id: data._id,
+            username: data.username,
+            email: data.email,
+            // Provide default empty arrays instead of trying to access non-existent properties
+            movies: [],
+            watchlist: [],
+            savedMovies: []
+        };
         next();
     }
     catch (err) {

@@ -1,17 +1,20 @@
 import { Request } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 import { TokenUser } from '../services/auth.js';
 
-// This interface needs to match the TokenUser interface from auth.ts
+// Update this interface to match what's expected in your application
 export interface IJwtPayload {
+  _id: string; 
   username: string;
   email: string;
-  _id: string;
-  // Add the missing properties to match what's expected
-  movies?: string[];
-  watchlist?: string[];
-  savedMovies?: string[];
+  // Make these non-optional since they're expected as required
+  movies: string[];
+  watchlist: string[];
+  savedMovies: string[];
 }
 
-export interface IUserAuthRequest extends Request {
-  user?: IJwtPayload; // Make user optional with ?
+// Update the interface with correct types
+export interface IUserAuthRequest extends Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>> {
+  user: IJwtPayload;
 }
