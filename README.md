@@ -128,6 +128,7 @@ Movie Squad integrates the OMDB API to
 - **MongoDB Atlas** (Database)
 
 ## Future Enhancements
-- ****
-
-## License
+- Allow users to make threads for discussing movies
+- Implement reviews and comments for movies
+- Implement movie rating
+- Sorting and searching of movies by genre, year, type (live-action, animated)
