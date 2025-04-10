@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link for routing
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; // Import Link for routing
+import { useQuery } from "@apollo/client";
+import { QUERY_ME } from "../utils/queries";
 
 const Profile: React.FC = () => {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [watchlist, setWatchlist] = useState<string[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  
 
   // Load watchlist from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('watchlist');
+    const saved = localStorage.getItem("watchlist");
     if (saved) {
       setWatchlist(JSON.parse(saved));
     }
@@ -16,8 +19,19 @@ const Profile: React.FC = () => {
 
   // Save watchlist to localStorage when it changes
   useEffect(() => {
-    localStorage.setItem('watchlist', JSON.stringify(watchlist));
+    localStorage.setItem("watchlist", JSON.stringify(watchlist));
   }, [watchlist]);
+
+  const { loading, error, data } = useQuery(QUERY_ME);
+
+  useEffect(() => {
+    if (data?.me?.watchlist) {
+      setWatchlist(data.me.watchlist);
+    }
+  }, [data]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error loading profile</div>;
 
   const handleWatchlistName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -25,9 +39,9 @@ const Profile: React.FC = () => {
 
   const handleAddToWatchlist = () => {
     const trimmed = search.trim();
-    if (trimmed !== '' && !watchlist.includes(trimmed)) {
+    if (trimmed !== "" && !watchlist.includes(trimmed)) {
       setWatchlist((prev) => [...prev, trimmed]);
-      setSearch('');
+      setSearch("");
     }
   };
 
