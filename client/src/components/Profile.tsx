@@ -2,14 +2,33 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
 import { useQuery } from "@apollo/client";
 import { QUERY_ME } from "../utils/queries";
+import Auth from "../utils/auth";
 
 const Profile: React.FC = () => {
   const [search, setSearch] = useState("");
   const [watchlist, setWatchlist] = useState<string[]>([]);
-  const [savedMovies, setSavedMovies] = useState<any[]>([]); // Add state for saved movies
+  const [savedMovies, setSavedMovies] = useState<any[]>([]); 
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [savedMoviesOpen, setSavedMoviesOpen] = useState(false); // Toggle for saved movies dropdown
+  const [savedMoviesOpen, setSavedMoviesOpen] = useState(false);
   
+  // Check if user is logged in
+  const loggedIn = Auth.loggedIn();
+
+  // Use useQuery with fetchPolicy to ensure fresh data
+  const { loading, error, data } = useQuery(QUERY_ME, {
+    fetchPolicy: 'network-only', // Don't use cache, always make network request
+    skip: !loggedIn, // Skip this query if user is not logged in
+  });
+
+  // Debug logging
+  useEffect(() => {
+    if (error) {
+      console.error('GraphQL Error:', error);
+    }
+    if (data) {
+      console.log('Query data:', data);
+    }
+  }, [error, data]);
 
   // Load watchlist from localStorage on mount
   useEffect(() => {
@@ -24,8 +43,6 @@ const Profile: React.FC = () => {
     localStorage.setItem("watchlist", JSON.stringify(watchlist));
   }, [watchlist]);
 
-  const { loading, error, data } = useQuery(QUERY_ME);
-
   useEffect(() => {
     if (data?.me?.watchlist) {
       setWatchlist(data.me.watchlist);
@@ -37,8 +54,33 @@ const Profile: React.FC = () => {
     }
   }, [data]);
 
+  // Show login message if not logged in
+  if (!loggedIn) {
+    return (
+      <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">Profile Page</h1>
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <p className="text-lg">Please log in to view your profile.</p>
+          <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading profile</div>;
+  
+  if (error) {
+    console.error('GraphQL Error Details:', error);
+    return (
+      <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">Error Loading Profile</h1>
+        <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-xl">
+          <p className="text-red-600 mb-2">Error message: {error.message}</p>
+          <p>Please try refreshing the page or logging in again.</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleWatchlistName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -109,7 +151,6 @@ const Profile: React.FC = () => {
                   key={index}
                   className="px-4 py-2 hover:bg-blue-100 cursor-pointer border-b last:border-none"
                 >
-                  {/* Link to watchlist page */}
                   <Link
                     to={`/watchlist/${item}`}
                     className="text-blue-600 hover:underline"
