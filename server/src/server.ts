@@ -6,7 +6,7 @@ import connectDB from './config/connection.js'
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas/index.js';
-import { authenticateToken } from './services/auth-service.js';
+import { authenticateToken } from './services/auth.js'; // Make sure the path matches
 
 // Fix for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);

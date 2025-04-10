@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // Import Link for routing
-import { useQuery } from "@apollo/client";
-import { QUERY_ME } from "../utils/queries";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; // Import Link for routing
 
 const Profile: React.FC = () => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [watchlist, setWatchlist] = useState<string[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  
 
   // Load watchlist from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("watchlist");
+    const saved = localStorage.getItem('watchlist');
     if (saved) {
       setWatchlist(JSON.parse(saved));
     }
@@ -19,19 +16,8 @@ const Profile: React.FC = () => {
 
   // Save watchlist to localStorage when it changes
   useEffect(() => {
-    localStorage.setItem("watchlist", JSON.stringify(watchlist));
+    localStorage.setItem('watchlist', JSON.stringify(watchlist));
   }, [watchlist]);
-
-  const { loading, error, data } = useQuery(QUERY_ME);
-
-  useEffect(() => {
-    if (data?.me?.watchlist) {
-      setWatchlist(data.me.watchlist);
-    }
-  }, [data]);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading profile</div>;
 
   const handleWatchlistName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -39,9 +25,9 @@ const Profile: React.FC = () => {
 
   const handleAddToWatchlist = () => {
     const trimmed = search.trim();
-    if (trimmed !== "" && !watchlist.includes(trimmed)) {
+    if (trimmed !== '' && !watchlist.includes(trimmed)) {
       setWatchlist((prev) => [...prev, trimmed]);
-      setSearch("");
+      setSearch('');
     }
   };
 
@@ -54,18 +40,15 @@ const Profile: React.FC = () => {
       <h1 className="text-3xl font-bold text-gray-800 mb-4">Profile Page</h1>
 
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-md p-6 mb-6">
-        <h2 className="text-2xl font-semibold text-center text-gray-700 mb-4">
-          Create A Watchlist
-        </h2>
+        <h2 className="text-2xl font-semibold text-center text-gray-700 mb-4">Create A Watchlist</h2>
 
         <input
           type="text"
           placeholder="Give your watchlist a name!"
           value={search}
           onChange={handleWatchlistName}
-          onKeyDown={(e) => e.key === "Enter" && handleAddToWatchlist()}
-          className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
-        />
+          onKeyDown={(e) => e.key === 'Enter' && handleAddToWatchlist()}
+          className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"/>
 
         <div className="flex flex-col sm:flex-row gap-4">
           <button
@@ -88,9 +71,7 @@ const Profile: React.FC = () => {
         {dropdownOpen && (
           <ul className="absolute z-10 mt-2 w-full bg-white rounded-xl shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
             {watchlist.length === 0 ? (
-              <li className="px-4 py-2 text-gray-500 italic">
-                No items added yet
-              </li>
+              <li className="px-4 py-2 text-gray-500 italic">No items added yet</li>
             ) : (
               watchlist.map((item, index) => (
                 <li
@@ -98,10 +79,7 @@ const Profile: React.FC = () => {
                   className="px-4 py-2 hover:bg-blue-100 cursor-pointer border-b last:border-none"
                 >
                   {/* Link to watchlist page */}
-                  <Link
-                    to={`/watchlist/${item}`}
-                    className="text-blue-600 hover:underline"
-                  >
+                  <Link to={`/watchlist/${item}`} className="text-blue-600 hover:underline">
                     {item}
                   </Link>
                 </li>

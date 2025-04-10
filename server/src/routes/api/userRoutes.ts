@@ -1,30 +1,16 @@
-import { Router } from 'express';
-import {
-    getAllUsers,
-    getUserById,
-    createUser,
-    updateUser,
-    deleteUser,
-    addFriend,
-    removeFriend
-} from '../../controllers/userController.js';
+import express from 'express';
+import { getAllUsers, getUserById, createUser, updateUser, deleteUser } from '../../controllers/userController.js';
+import { authMiddleware } from '../../middleware/authMiddleware.js';
 
-const router = Router();
+const router = express.Router();
 
-// /api/users
-router.route('/')
-    .get(getAllUsers as any)
-    .post(createUser as any);
+// Public routes
+router.route('/').get(getAllUsers).post(createUser);
 
-// /api/users/:userId
+// Protected routes - require authentication
 router.route('/:userId')
-    .get(getUserById as any)
-    .put(updateUser as any)
-    .delete(deleteUser as any);
-
-// /api/users/:userId/friends/:friendId
-router.route('/:userId/friends/:friendId')
-    .post(addFriend as any)
-    .delete(removeFriend as any);
+  .get(authMiddleware, getUserById)
+  .put(authMiddleware, updateUser)
+  .delete(authMiddleware, deleteUser);
 
 export default router;
