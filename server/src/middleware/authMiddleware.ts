@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { TokenUser } from '../services/auth-service.js';
+import { TokenUser } from '../services/auth.js'; // Fix import
 
 const secret = process.env.JWT_SECRET || 'secretkey';
 

@@ -1,4 +1,4 @@
-import { TokenUser } from '../services/auth-service';
+import { TokenUser } from '../services/auth';
 
 // Properly extend Express types globally
 declare global {

@@ -1,6 +1,6 @@
 import { Schema, Types, model, Document } from 'mongoose';
 
-interface IMovie extends Document {
+export interface IMovie extends Document {
     movieId: string;      // Can use imdbID from OMDB
     title: string;        // Maps to OMDB "Title"
     posterPath: string;   // Maps to OMDB "Poster"
@@ -83,5 +83,5 @@ const movieSchema = new Schema<IMovie>({
 
 const Movie = model<IMovie>('Movie', movieSchema);
 
-export { type IMovie, movieSchema };
+export { movieSchema };
 export default Movie;

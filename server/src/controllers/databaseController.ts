@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getDatabaseStats, getCollections } from '../utils/atlas-utils.js';
 import { User, Movie } from '../models/index.js';
+import { IMovie } from '../models/Movie.js';
 
 // Get database stats
 export const getStats = async (_req: Request, res: Response) => {
@@ -52,5 +53,45 @@ export const getAllSavedMovies = async (_req: Request, res: Response) => {
   } catch (err) {
     console.error('Error retrieving saved movies:', err);
     return res.status(500).json({ message: 'Error retrieving saved movies', error: err });
+  }
+};
+
+// Get all movies
+export const getAllMovies = async (_req: Request, res: Response) => {
+  try {
+    const movies = await Movie.find({});
+    return res.json(movies);
+  } catch (err) {
+    console.error('Error retrieving movies:', err);
+    return res.status(500).json({ message: 'Error retrieving movies', error: err });
+  }
+};
+
+// Get movie by ID
+export const getMovieById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const movie = await Movie.findOne({ movieId: id });
+    
+    if (!movie) {
+      return res.status(404).json({ message: 'Movie not found' });
+    }
+    
+    return res.json(movie);
+  } catch (err) {
+    console.error('Error retrieving movie:', err);
+    return res.status(500).json({ message: 'Error retrieving movie', error: err });
+  }
+};
+
+// Get movies by genre
+export const getMoviesByGenre = async (req: Request, res: Response) => {
+  try {
+    const { genre } = req.params;
+    const movies = await Movie.find({ genres: { $in: [genre] } });
+    return res.json(movies);
+  } catch (err) {
+    console.error('Error retrieving movies by genre:', err);
+    return res.status(500).json({ message: 'Error retrieving movies', error: err });
   }
 };

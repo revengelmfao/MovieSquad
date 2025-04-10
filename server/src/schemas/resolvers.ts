@@ -1,5 +1,5 @@
 import { User, Rating, Review, Movie } from "../models/index.js";
-import { signToken, AuthenticationError, UserContext, TokenUser } from "../services/auth-service.js";
+import { signToken, AuthenticationError, UserContext, TokenUser } from "../services/auth.js"; // Fix import
 import { Schema, Document, ObjectId, Types } from "mongoose";
 
 // Define proper interfaces for your types

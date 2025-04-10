@@ -1,5 +1,5 @@
 import { User, Movie } from "../models/index.js";
-import { signToken, AuthenticationError } from "../services/auth-service.js";
+import { signToken, AuthenticationError } from "../services/auth.js"; // Fix import
 const resolvers = {
     Query: {
         me: async (_, __, context) => {

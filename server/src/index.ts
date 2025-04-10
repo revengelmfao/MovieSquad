@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas/index.js';
-import { authenticateToken, UserContext } from './services/auth-service.js';
+import { authenticateToken, UserContext } from './services/auth.js'; // Fix import
 import connectDB from './config/connection.js';
 // Import API routes
 import apiRoutes from './routes/api/index.js';

@@ -6,6 +6,7 @@ const userSchema = new Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    // This uses the schema, not the model - fixes the invalid model error
     savedMovies: [movieSchema],
     watchlist: [{ type: String }],
     ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
@@ -22,7 +23,6 @@ userSchema.pre("save", async function (next) {
     }
     next();
 });
-// Rename comparePassword to isCorrectPassword to match interface
 userSchema.methods.isCorrectPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 };
