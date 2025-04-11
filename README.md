@@ -21,18 +21,20 @@ Movie Squad is an interactive full MERN stack single page application designed t
 
 ## Live Deployment
 
-[Movie Squad live]()
+[Movie Squad live](https://moviesquad.onrender.com/)
 
 ## Screenshots
 
 ### **Homepage:**
-![Homepage Screenshot]()
+![MovieSquad-Homepage](https://github.com/user-attachments/assets/760959ef-e3d5-4fab-9b41-5ecb1355a4d1)
 
-### **Movie Search:**
-![]()
+### **Profile Page:**
+![Profile page](https://github.com/user-attachments/assets/88d091e0-c2d8-4105-bf8a-da2522d1342d)
 
-### **Movie Review**
-![]()
+### **Movie Search/Watchlist**
+![watchlist page](https://github.com/user-attachments/assets/e61559f1-cc9a-4ec3-ba73-9d7d0ed41d8d)
+![filled watchlist](https://github.com/user-attachments/assets/fd0f146e-e6f0-417c-b468-046be99e3c55)
+
 
 ## Project Setup
 
@@ -87,9 +89,17 @@ If not, add these lines **manually** to prevent accidental commits of API keys.
 #### 🔹 **Returns**: A list of movies.
 ```json
 [
-  {
-    
-  }
+    {
+        "movieId": "1",
+        "title": "Inception",
+        "posterPath": "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
+        "description": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
+        "releaseDate": "2010-07-16",
+        "year": 2010,
+        "director": "Christopher Nolan",
+        "actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page"],
+        "genres": ["Sci-Fi", "Action", "Thriller"]
+    }
 ]
 ```
 
@@ -118,6 +128,7 @@ Movie Squad integrates the OMDB API to
 - **MongoDB Atlas** (Database)
 
 ## Future Enhancements
-- ****
-
-## License
+- Allow users to make threads for discussing movies
+- Implement reviews and comments for movies
+- Implement movie rating
+- Sorting and searching of movies by genre, year, type (live-action, animated)
