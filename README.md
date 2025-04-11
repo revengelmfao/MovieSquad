@@ -117,7 +117,7 @@ If not, add these lines **manually** to prevent accidental commits of API keys.
 - Ensure the database **(MongoDB) is set up and connected through MongoDB Atlas**.
 
 ## API Integrations
-Movie Squad integrates the OMDB API to 
+Movie Squad integrates the OMDB API to view movies, descriptions and more.
 
 ## Technologies Used
 ### **Frontend:** 
@@ -133,6 +133,7 @@ Movie Squad integrates the OMDB API to
 ### **Other Tools:** 
 - **Render** (Deployment)
 - **MongoDB Atlas** (Database)
+- **ApolloSandbox** (Queries)
 
 ## Future Enhancements
 - Allow users to make threads for discussing movies
