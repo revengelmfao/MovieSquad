@@ -1,4 +1,11 @@
 # Movie Squad: MERN Stack Single-Page Application
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
+<img alt="React" src="https://img.shields.io/badge/React-18+-blue.svg">
+<img alt="GraphQL" src="https://img.shields.io/badge/GraphQL-16+-purple.svg">
+<img alt="Apollo" src="https://img.shields.io/badge/Apollo-3.7+-blueviolet.svg">
+<img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-4.4+-green.svg">
+<img alt="Express" src="https://img.shields.io/badge/Express-4.17+-green.svg">
+<img alt="Node.js" src="https://img.shields.io/badge/Node.js-16+-green.svg">
 
 ## Project Overview
 Movie Squad is an interactive full MERN stack single page application designed to help movie buffs save lists of their favorite movies and write reviews. Users can create watchlists, rate movies, write reviews and comment on other user reviews.
